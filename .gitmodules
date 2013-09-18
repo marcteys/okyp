@@ -1,3 +1,6 @@
 [submodule "lib/three.js"]
 	path = lib/three.js
 	url = https://github.com/mrdoob/three.js.git
+[submodule "requirejs"]
+	path = requirejs
+	url = https://github.com/jrburke/requirejs.git
