@@ -45,7 +45,7 @@ var spherematerial = new THREE.MeshLambertMaterial(
 } );
 var sphere = new THREE.Mesh(
 	new THREE.SphereGeometry(
-		50,16,16
+		30,32,32
 		), spherematerial);
 
 
