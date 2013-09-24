@@ -10,13 +10,13 @@
 Leap Motion mesh builder
 
 */
-window.requestAnimFrame = (function(){
-  return  window.requestAnimationFrame       ||
-          window.webkitRequestAnimationFrame ||
-          window.mozRequestAnimationFrame    ||
-          function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-          };
+window.requestAnimFrame = (function() {
+	return window.requestAnimationFrame ||
+		window.webkitRequestAnimationFrame ||
+		window.mozRequestAnimationFrame ||
+		function(callback) {
+			window.setTimeout(callback, 1000 / 60);
+	};
 })();
 
 //global var
@@ -27,9 +27,12 @@ var height = 300,
 	width = 640;
 
 
-var renderer = new THREE.WebGLRenderer({ antialias: true });
+var renderer = new THREE.WebGLRenderer({
+	antialias: true
+});
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 45, width/height, 0.1, 10000 );
+var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
+
 
 
 //drawing
@@ -40,13 +43,13 @@ camera.position.z = 300;
 
 // elements
 
-var spherematerial = new THREE.MeshLambertMaterial( 
-{color : 0xFF000
-} );
+var spherematerial = new THREE.MeshLambertMaterial({
+	color: 0xFF000
+});
 var sphere = new THREE.Mesh(
 	new THREE.SphereGeometry(
-		30,32,32
-		), spherematerial);
+		30, 32, 32
+	), spherematerial);
 
 
 var pointlight = new THREE.PointLight(0xFFFFFF);
@@ -58,48 +61,93 @@ scene.add(sphere);
 scene.add(pointlight);
 
 
-renderer.setSize(width,height);
+renderer.setSize(width, height);
 container.appendChild(renderer.domElement);
 
 
-(function animloop(){
-  requestAnimFrame(animloop);
-	renderer.render(scene,camera);
+
+// Leap motion
+// 
+// 
+// 
+
+var controller = new Leap.Controller({
+	enableGestures: true
+});
+
+controller.connect();
+
+var frame;
+
+controller.on('connect', function() {
+
+	console.log('Successfully connected.');
+
+});
+
+controller.on('frame', function(data) {
+
+	frame = data;
+
+
+
+	for (var i = 0; i < frame.gestures.length; i++) {
+
+		var gesture = frame.gestures[0];
+		var type = gesture.type;
+		console.log(gesture);
+
+		switch (type) {
+
+
+
+			case "keyTap":
+				sphere.position.x = gesture.position[0];
+				break;
+
+		}
+
+	}
+
+
+
+});
+
+
+console.log(frame);
+
+
+
+function leapToScene(leapPos) {
+
+	var iBox = frame.interactionBox;
+
+	var left = iBox.center[0] - iBox.size[0] / 2;
+	var top = iBox.center[1] + iBox.size[1] / 2;
+
+	var x = leapPos[0] - left;
+	var y = leapPos[1] - top;
+
+	x /= iBox.size[0];
+	y /= iBox.size[1];
+
+	x *= width;
+	y *= height;
+
+	return [x, -y];
+
+}
+
+
+
+(function animloop() {
+	requestAnimFrame(animloop);
+	renderer.render(scene, camera);
 })();
 
 
 
-
-
-  window.onmousemove = handleMouseMove;
-  setInterval(getMousePosition, 100); // setInterval repeats every X ms
-
-  function handleMouseMove(event) {
-      event = event || window.event; // IE-ism
-      mousePos = {
-          x: event.clientX,
-          y: event.clientY
-      };
-  }
-
-  function getMousePosition() {
-      var pos = mousePos;
-      if (!pos) {
-          // We haven't seen any movement yet
-          pos = {x: "?", y: "?"};
-      }
-     pointlight.position.x =  pos.x ;
-     pointlight.position.y =  -pos.y ;
-  }
-  
-  function display(msg) {
-    var p = document.createElement('p');
-    p.innerHTML = msg;
-    document.body.appendChild(p);
-  }
-
-
-
+/* Leap fonctione
 
 
    console.log('CHECK');
@@ -157,3 +205,4 @@ container.appendChild(renderer.domElement);
         var toReturn = new THREE.Vector3(x,y,z)
         return toReturn
       }
+*/
