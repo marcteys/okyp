@@ -78,7 +78,7 @@ camera.lookAt(scene.position);
 
 
 
-/*
+
         controls = new THREE.TrackballControls( camera );
 
         controls.rotateSpeed = 1.0;
@@ -94,7 +94,7 @@ camera.lookAt(scene.position);
         controls.keys = [ 65, 83, 68 ];
 
         controls.addEventListener( 'change', render );
-*/
+
         // world
 
 
@@ -118,9 +118,9 @@ camera.lookAt(scene.position);
   
   var origin = new THREE.Vector3( 0, 0, 0 );
 
-   coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), origin, 175, 0x000000);
-        coords2 = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), origin, 175, 0x000000);
-        coords3 = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), origin, 175, 0x000000);
+   coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), origin, 175, 0x888888);
+        coords2 = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), origin, 175, 0x888888);
+        coords3 = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), origin, 175, 0x888888);
         scene.add(coords1);
         scene.add(coords2);
         scene.add(coords3);
@@ -137,6 +137,7 @@ matBlue.side = THREE.DoubleSide;
 var sphermesh = new THREE.Mesh(new THREE.SphereGeometry( 150,32,32 ), matRed);;
 var sphermesh2 = new THREE.Mesh(new THREE.SphereGeometry( 150,32,32 ), matBlue);;
 sphermesh2.position.x = 450;
+sphermesh.position.x = -450;
 scene.add(sphermesh);
 scene.add(sphermesh2);
 
@@ -195,27 +196,7 @@ scene.add(object2);
 addGrid(1000,100,0x000000,0.2);
 
 
-  // LIGHTS
-  // 
-  
-  // nice hipster effect var ambientLight = new THREE.AmbientLight(0x000044);
-  var ambientLight = new THREE.AmbientLight(0x222233);
-      scene.add(ambientLight);
-
-
-        hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
-        hemiLight.color.setHSL( 0.6, 1, 0.6 );
-        hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-        hemiLight.position.set( 0, 500, 0 );
-        scene.add( hemiLight );
-
-        //
-
-        dirLight = new THREE.DirectionalLight( 0xffffff, .8 );
-        dirLight.color.setHSL( .8, 1, 0.95 );
-        dirLight.position.set( -1, 1.75, 1 );
-        scene.add( dirLight );
-
+addLights();
 
 
 
@@ -249,7 +230,7 @@ addGrid(1000,100,0x000000,0.2);
           coords1.position = cameraControls.target;
           coords2.position = cameraControls.target;
           coords3.position = cameraControls.target;
-          
+
         });
 
 
@@ -306,7 +287,7 @@ addGrid(1000,100,0x000000,0.2);
       function animate() {
 
         requestAnimationFrame( animate );
-       // controls.update();
+        controls.update();
        // 
         changeControlsIndex
         render();
@@ -332,6 +313,10 @@ addGrid(1000,100,0x000000,0.2);
         }; 
         lastControlsIndex = controlsIndex;
       };
+
+
+
+
 
 
 
@@ -365,3 +350,31 @@ function addGrid(size,step,color,opacity) {
 
 }
 
+
+
+
+function addLights() {
+
+
+  // LIGHTS
+  // 
+  
+  // nice hipster effect var ambientLight = new THREE.AmbientLight(0x000044);
+  var ambientLight = new THREE.AmbientLight(0x222233);
+      scene.add(ambientLight);
+
+
+        hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.7 );
+        hemiLight.color.setHSL( 0.6, 1, 0.6 );
+        hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+        hemiLight.position.set( 0, 500, 0 );
+        scene.add( hemiLight );
+
+        //
+
+        dirLight = new THREE.DirectionalLight( 0xffffff, .8 );
+        dirLight.color.setHSL( .8, 1, 0.95 );
+        dirLight.position.set( -1, 1.75, 1 );
+        scene.add( dirLight );
+
+}
