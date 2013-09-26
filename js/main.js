@@ -42,7 +42,7 @@ var SCENE_SIZE = 1000;
       function init() {
 
         camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
-        camera.position.z = 2000;
+        camera.position.z = SCENE_SIZE*2;
         camera.position.y = 1000;
 
                 scene = new THREE.Scene();
@@ -86,12 +86,6 @@ camera.lookAt(scene.position);
         }
 
   
-
-        var vertexShader = document.getElementById( 'vertexShader' ).textContent;
-        var fragmentShader = document.getElementById( 'fragmentShader' ).textContent;
-
-
-
 
 
 
@@ -181,9 +175,8 @@ addGrid(1000,100,0x000000,0.2);
         //
 
         dirLight = new THREE.DirectionalLight( 0xffffff, .8 );
-        dirLight.color.setHSL( 1, 1, 0.95 );
+        dirLight.color.setHSL( .8, 1, 0.95 );
         dirLight.position.set( -1, 1.75, 1 );
-        dirLight.position.multiplyScalar( 50 );
         scene.add( dirLight );
 
 
