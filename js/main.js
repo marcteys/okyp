@@ -17,6 +17,9 @@ deux doigts pour modéliser
 
 
 exemple rotation : voxel paint
+
+test
+
 */
 window.requestAnimFrame = (function() {
 	return window.requestAnimationFrame ||
