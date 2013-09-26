@@ -24,9 +24,7 @@ exemple ;isc control transform
 
 
 
-
-
-if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+      if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
       var container, stats;
 
@@ -34,139 +32,17 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
       var cross;
 
+      var clock, geometry, material, mesh,controller, hands= [];
+var SCENE_SIZE = 1000;
       init();
       animate();
 
       function init() {
 
-        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-        camera.position.z = 500;
-
-        controls = new THREE.OrbitControls( camera );
-        controls.addEventListener( 'change', render );
-
-        scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
-
-        // world
-
-        var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
-        var material =  new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-
-        for ( var i = 0; i < 500; i ++ ) {
-
-          var mesh = new THREE.Mesh( geometry, material );
-          mesh.position.x = ( Math.random() - 0.5 ) * 1000;
-          mesh.position.y = ( Math.random() - 0.5 ) * 1000;
-          mesh.position.z = ( Math.random() - 0.5 ) * 1000;
-          mesh.updateMatrix();
-          mesh.matrixAutoUpdate = false;
-          scene.add( mesh );
-
-        }
-
-
-        // lights
-
-        light = new THREE.DirectionalLight( 0xffffff );
-        light.position.set( 1, 1, 1 );
-        scene.add( light );
-
-        light = new THREE.DirectionalLight( 0x002288 );
-        light.position.set( -1, -1, -1 );
-        scene.add( light );
-
-        light = new THREE.AmbientLight( 0x222222 );
-        scene.add( light );
-
-
-        // renderer
-
-        renderer = new THREE.WebGLRenderer( { antialias: false } );
-        renderer.setClearColor( scene.fog.color, 1 );
-        renderer.setSize( window.innerWidth, window.innerHeight );
-
-        container = document.getElementById( 'container' );
-        container.appendChild( renderer.domElement );
-
-        stats = new Stats();
-        stats.domElement.style.position = 'absolute';
-        stats.domElement.style.top = '0px';
-        stats.domElement.style.zIndex = 100;
-        container.appendChild( stats.domElement );
-
-        //
-
-        window.addEventListener( 'resize', onWindowResize, false );
-
-      }
-
-      function onWindowResize() {
-
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-
-        renderer.setSize( window.innerWidth, window.innerHeight );
-
-        render();
-
-      }
-
-      function animate() {
-
-        requestAnimationFrame( animate );
-        controls.update();
-
-      }
-
-      function render() {
-
-        renderer.render( scene, camera );
-        stats.update();
-
-      }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-window.requestAnimFrame = (function() {
-	return window.requestAnimationFrame ||
-		window.webkitRequestAnimationFrame ||
-		window.mozRequestAnimationFrame ||
-		function(callback) {
-			window.setTimeout(callback, 1000 / 60);
-	};
-})();
-
-
-
-
-var controls;
-
-      var SCENE_SIZE = 1000, camera, scene, renderer, stats, clock, geometry, material, mesh,controller, hands= [];
-
-      var init = function () {
-        camera = new THREE.PerspectiveCamera( 65, window.innerWidth / window.innerHeight, 1, 10000 );
-        camera.position.z = SCENE_SIZE*2;
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
+        camera.position.z = 2000;
         camera.position.y = 1000;
-        scene = new THREE.Scene();
-
-
-
-
- controls = new THREE.TrackballControls( camera );
+        controls = new THREE.TrackballControls( camera );
 
         controls.rotateSpeed = 1.0;
         controls.zoomSpeed = 1.2;
@@ -182,10 +58,12 @@ var controls;
 
         controls.addEventListener( 'change', render );
 
+        // world
 
-               // GOOD camera.lookAt( scene.position );
+        scene = new THREE.Scene();
 
-        geometry = new THREE.SphereGeometry(SCENE_SIZE/20,4,4);
+
+ geometry = new THREE.SphereGeometry(SCENE_SIZE/20,4,4);
         material = new THREE.MeshBasicMaterial( { color: 0x000000, wireframe: true, wireframeLinewidth:  1} );
         for(var i = 0; i<2; i ++){
           var hand = new THREE.Mesh( geometry, material );
@@ -201,38 +79,6 @@ var controls;
           hands.push( hand );
         }
 
-        // LIGHTS
-
-        hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
-        hemiLight.color.setHSL( 0.6, 1, 0.6 );
-        hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
-        hemiLight.position.set( 0, 500, 0 );
-        scene.add( hemiLight );
-
-        //
-
-        dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
-        dirLight.color.setHSL( 0.1, 1, 0.95 );
-        dirLight.position.set( -1, 1.75, 1 );
-        dirLight.position.multiplyScalar( 50 );
-        scene.add( dirLight );
-
-        dirLight.castShadow = true;
-
-        dirLight.shadowMapWidth = 2048;
-        dirLight.shadowMapHeight = 2048;
-
-        var d = 50;
-
-        dirLight.shadowCameraLeft = -d;
-        dirLight.shadowCameraRight = d;
-        dirLight.shadowCameraTop = d;
-        dirLight.shadowCameraBottom = -d;
-
-        dirLight.shadowCameraFar = 3500;
-        dirLight.shadowBias = -0.0001;
-        dirLight.shadowDarkness = 0.35;
-        //dirLight.shadowCameraVisible = true;
 
 
 var geom = new THREE.Geometry(); 
@@ -281,22 +127,51 @@ object2.rotation.y = -Math.PI * .5;//triangle is pointing in depth, rotate it -9
 scene.add(object2);
 
 
-
-
-
-
-        // grid
-        //         var size = 500, step = 50;
-
 addGrid(1000,100,0x000000,0.2);
 
+  // LIGHTS
+
+        hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+        hemiLight.color.setHSL( 0.6, 1, 0.6 );
+        hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+        hemiLight.position.set( 0, 500, 0 );
+        scene.add( hemiLight );
+
+        //
+
+        dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
+        dirLight.color.setHSL( 0.1, 1, 0.95 );
+        dirLight.position.set( -1, 1.75, 1 );
+        dirLight.position.multiplyScalar( 50 );
+        scene.add( dirLight );
+
+        dirLight.castShadow = true;
+
+        dirLight.shadowMapWidth = 2048;
+        dirLight.shadowMapHeight = 2048;
+
+        var d = 50;
+
+        dirLight.shadowCameraLeft = -d;
+        dirLight.shadowCameraRight = d;
+        dirLight.shadowCameraTop = d;
+        dirLight.shadowCameraBottom = -d;
+
+        dirLight.shadowCameraFar = 3500;
+        dirLight.shadowBias = -0.0001;
+        dirLight.shadowDarkness = 0.35;
+        //dirLight.shadowCameraVisible = true;
 
 
 
 
-        renderer = new THREE.WebGLRenderer();
-        renderer.setSize( window.innerWidth, window.innerHeight );
-        document.body.appendChild( renderer.domElement );
+
+
+
+
+
+
+
         Leap.loop(function(frame){
           for(var i = 0; i <2; i++){
             if(frame.hands[i]){
@@ -313,20 +188,74 @@ addGrid(1000,100,0x000000,0.2);
             }
           }
         });
+
+
+
+
+
+
+
+        // renderer
+
+        renderer = new THREE.WebGLRenderer( { antialias: false } );
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        container = document.getElementById( 'container' );
+        container.appendChild( renderer.domElement );
+
+        stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = '0px';
+        stats.domElement.style.zIndex = 100;
+        container.appendChild( stats.domElement );
+
+        //
+
+        window.addEventListener( 'resize', onWindowResize, false );
+
       }
-      var animate = function () {
-        requestAnimationFrame( animate );
-        renderer.render( scene, camera );
-      }
-      init();
-      animate();
-      function leapToScene(leapPosition){
+
+
+        function leapToScene(leapPosition){
         var x = (leapPosition[0]/300)*SCENE_SIZE
         var y = (((leapPosition[1])-200)/300)*SCENE_SIZE
         var z = (leapPosition[2]/300)*SCENE_SIZE
         var toReturn = new THREE.Vector3(x,y,z)
         return toReturn
       }
+
+
+
+
+      function onWindowResize() {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        controls.handleResize();
+
+        render();
+
+      }
+
+      function animate() {
+
+        requestAnimationFrame( animate );
+        controls.update();
+
+      }
+
+      function render() {
+
+        renderer.render( scene, camera );
+        stats.update();
+
+      }
+
+
+
 
 
 function addGrid(size,step,color,opacity) {
@@ -357,4 +286,5 @@ function addGrid(size,step,color,opacity) {
         scene.add( plane );
 
 
-}*/
+}
+
