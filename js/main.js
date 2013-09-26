@@ -30,6 +30,9 @@ d
 
       var camera, controls, scene, renderer;
 
+var cameraControls;
+      var lastControlsIndex = -1, controlsIndex = -1, index = -1;
+
       var cross;
 
       var clock, geometry, material, mesh,controller, hands= [];
@@ -49,6 +52,33 @@ var SCENE_SIZE = 1000;
 
 camera.lookAt(scene.position);
 
+
+ cameraControls = new THREE.LeapCameraControls(camera);
+
+        cameraControls.rotateEnabled  = true;
+        cameraControls.rotateSpeed    = 3;
+        cameraControls.rotateHands    = 1;
+        cameraControls.rotateFingers  = [2, 3];
+        
+        cameraControls.zoomEnabled    = true;
+        cameraControls.zoomSpeed      = 6;
+        cameraControls.zoomHands      = 1;
+        cameraControls.zoomFingers    = [4, 5];
+        cameraControls.zoomMin        = 50;
+        cameraControls.zoomMax        = 2000;
+        
+        cameraControls.panEnabled     = true;
+        cameraControls.panSpeed       = 2;
+        cameraControls.panHands       = 2;
+        cameraControls.panFingers     = [6, 12];
+        cameraControls.panRightHanded = false; // for left-handed person
+
+
+
+
+
+
+/*
         controls = new THREE.TrackballControls( camera );
 
         controls.rotateSpeed = 1.0;
@@ -64,7 +94,7 @@ camera.lookAt(scene.position);
         controls.keys = [ 65, 83, 68 ];
 
         controls.addEventListener( 'change', render );
-
+*/
         // world
 
 
@@ -86,7 +116,14 @@ camera.lookAt(scene.position);
         }
 
   
+  var origin = new THREE.Vector3( 0, 0, 0 );
 
+   coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), origin, 175, 0x000000);
+        coords2 = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), origin, 175, 0x000000);
+        coords3 = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), origin, 175, 0x000000);
+        scene.add(coords1);
+        scene.add(coords2);
+        scene.add(coords3);
 
 
 var matBlue = new THREE.MeshPhongMaterial({color: 0x025D8C});
@@ -199,6 +236,20 @@ addGrid(1000,100,0x000000,0.2);
               hands[i].position.x = SCENE_SIZE *1000
             }
           }
+
+
+
+ if (index == -1) {
+            cameraControls.update(frame);
+          } else {
+            objectsControls[index].update(frame);
+          };
+
+          // custom modifications (here: show coordinate system always on target and light movement)
+          coords1.position = cameraControls.target;
+          coords2.position = cameraControls.target;
+          coords3.position = cameraControls.target;
+          
         });
 
 
@@ -255,8 +306,10 @@ addGrid(1000,100,0x000000,0.2);
       function animate() {
 
         requestAnimationFrame( animate );
-        controls.update();
-
+       // controls.update();
+       // 
+        changeControlsIndex
+        render();
       }
 
       function render() {
@@ -266,7 +319,19 @@ addGrid(1000,100,0x000000,0.2);
 
       }
 
-
+      function changeControlsIndex() {
+        if (lastControlsIndex == controlsIndex) {
+          if (index != controlsIndex && controlsIndex > -2) {
+            // new object or camera to control
+            if (controlsIndex > -2) {
+              if (index > -1) objects[index].material.color.setHex(0xefefef);
+              index = controlsIndex;
+              if (index > -1) objects[index].material.color.setHex(0xff0000);
+            }
+          };
+        }; 
+        lastControlsIndex = controlsIndex;
+      };
 
 
 
