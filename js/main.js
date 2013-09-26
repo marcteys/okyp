@@ -138,7 +138,6 @@ scene.add(line);
   for (var i = 0; i < 2; i++) {
     var hand = new THREE.Mesh( new THREE.RingGeometry( 140, 160, 40, 90, 100, Math.PI * 2 ), handMaterial );
     
-   //  hand.rotation.x = 90;
 
     hand.fingers = [];
 
@@ -248,7 +247,9 @@ matBlue.side = THREE.DoubleSide;
     for (var i = 0; i < 2; i++) {
       if (frame.hands[i]) {
         hands[i].position = leapToScene(frame.hands[i].palmPosition);
-        hands[i].rotation = leapToScene(frame.hands[i].palmRotation);
+
+
+   //     hands[i].rotation.applyEuler(leapToScene(frame.hands[i].palmNormal));
 
         for (var j = 0; j < 5; j++) {
           if (frame.hands[i].fingers[j]) {
@@ -260,6 +261,8 @@ matBlue.side = THREE.DoubleSide;
       } else {
         hands[i].position.x = SCENE_SIZE * 1000;
       }
+
+
     }
 
 
@@ -276,7 +279,6 @@ matBlue.side = THREE.DoubleSide;
     coords3.position = cameraControls.target;
 
   });
-
 
 
   // renderer
