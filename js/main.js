@@ -139,12 +139,16 @@ scene.add(line);
 
   var matOrange = new THREE.MeshPhongMaterial({
     color: 0xCC3300,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
+    transparent : true,
+    opacity : 0.8
   });
 
   var matRed = new THREE.MeshPhongMaterial({
     color: 0xC6010A,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
+    transparent : true,
+    opacity : 0.8
   });
 
 
@@ -167,9 +171,10 @@ scene.add(line);
   var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(150, 32, 32), matRed);;
   var sphermesh2 = new THREE.Mesh(new THREE.SphereGeometry(150, 32, 32), matBlue);;
   sphermesh2.position.x = 450;
-  sphermesh.position.x = -450;
+  sphermesh.position.x = -tempX;
+
   scene.add(sphermesh);
-  scene.add(sphermesh2);
+ // scene.add(sphermesh2);
 
 
 
@@ -249,6 +254,7 @@ scene.add(line);
 
   var countPoints = -1;
 
+var updateTriangle = false;
 
   function createPoint() {
 
@@ -256,17 +262,18 @@ scene.add(line);
 
     switch (countPoints % 3) {
       case 0:
-        pointA = new THREE.Vector3( 0, 150, 80 );
+        pointA = new THREE.Vector3(tempX, tempY, 80);
         createSphere(pointA);
         break;
       case 1:
-        pointB = new THREE.Vector3( -320, 500, -500 );
+        pointB = new THREE.Vector3(tempX, tempY, -500);
         createSphere(pointB);
+        updateTriangle = true;
         break;
       case 2:
-        pointC = new THREE.Vector3( 130, 500, 200 );
+        pointC = new THREE.Vector3(tempX, tempY, 200);
         createSphere(pointC);
-        createTriangle(pointA,pointB,pointC);
+        createTriangle(pointA, pointB, pointC);
         break;
     }
 
@@ -274,6 +281,33 @@ scene.add(line);
 
 
   }
+
+
+
+
+  function updateLine(pointA, pointB) {
+
+
+    var lineGeometry = new THREE.Geometry(); // en faire une variable globale
+
+    lineGeometry.vertices.push(pointA);
+    lineGeometry.vertices.push(pointB);
+    lineGeometry.verticesNeedUpdate = true;
+
+    var lineMaterial = new THREE.LineBasicMaterial({
+      color: 0xFFFFFF,
+      transparent: true,
+      linewidth: 3
+    });
+
+    this.line = new THREE.Line(lineGeometry, lineMaterial);
+    this.line.geometry.verticesNeedUpdate = true;
+
+    scene.add(this.line);
+
+
+  }
+
 
   function createTriangle(pointA, pointC, pointC) {
 
@@ -290,25 +324,50 @@ scene.add(line);
     geom.computeFaceNormals();
 
     var object = new THREE.Mesh(geom, matBlue);
+    object.geometry.verticesNeedUpdate = true;
 
 
     scene.add(object);
 
   }
 
+  function createSphere(point) {
 
-function createSphere(point){
+    var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matRed);;
+    sphermesh.position = point;
+    scene.add(sphermesh);
 
-  var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matRed);;
-  sphermesh.position = point;
-  scene.add(sphermesh);
-
-}
+  }
 
   document.onkeypress = function(evt) {
     var k = evt ? evt.which : window.event.keyCode;
     if (k == 32) createPoint();
   }
+
+
+
+
+document.onmousemove = getMouseXY;
+
+// Temporary variables to hold mouse x-y pos.s
+var tempX = 0
+var tempY = 0
+
+// Main function to retrieve mouse x-y pos.s
+
+function getMouseXY(e) {
+
+    tempX = e.pageX
+    tempY = e.pageY
+  // catch possible negative values in NS4
+  if (tempX < 0){tempX = 0}
+  if (tempY < 0){tempY = 0}  
+  // show the position values in the form named Show
+  // in the text fields named MouseX and MouseY
+
+  return true
+}
+
 
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -473,7 +532,6 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
 }
-
 
 function leapToScene(leapPosition) {
   var x = (leapPosition[0] / 300) * SCENE_SIZE
