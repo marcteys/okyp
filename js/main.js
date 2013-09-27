@@ -44,6 +44,10 @@ var SCENE_SIZE = 1000;
 init();
 animate();
 
+
+
+var activeTriangle;
+
 function init() {
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -254,7 +258,25 @@ scene.add(line);
 
   var countPoints = -1;
 
-var updateTriangle = false;
+
+
+
+  var geom = new THREE.Geometry();
+
+    geom.vertices.push(new THREE.Vector3( 0, 0, 0 ));
+    geom.vertices.push(new THREE.Vector3( 0, 0, 0 ));
+    geom.vertices.push(new THREE.Vector3( 0, 0, 0 ));
+
+    geom.faces.push(new THREE.Face3(0, 1, 2));
+    geom.computeFaceNormals();
+    activeTriangle = new THREE.Mesh(geom, matBlue);
+     activeTriangle.geometry.verticesNeedUpdate = true;
+
+    scene.add(activeTriangle);
+
+
+
+
 
   function createPoint() {
 
@@ -265,22 +287,29 @@ var updateTriangle = false;
         pointA = new THREE.Vector3(tempX, tempY, 80);
         createSphere(pointA);
         break;
+
       case 1:
         pointB = new THREE.Vector3(tempX, tempY, -500);
         createSphere(pointB);
-        updateTriangle = true;
+
+        activeTriangle.geometry.vertices[0] = pointA;
+        activeTriangle.geometry.vertices[1] = pointB;
+
         break;
+
       case 2:
         pointC = new THREE.Vector3(tempX, tempY, 200);
         createSphere(pointC);
         createTriangle(pointA, pointB, pointC);
         break;
+
     }
 
 
 
 
   }
+
 
 
 
@@ -311,6 +340,11 @@ var updateTriangle = false;
 
   function createTriangle(pointA, pointC, pointC) {
 
+
+    activeTriangle.geometry.vertices[0] =
+      activeTriangle.geometry.vertices[1] =
+      activeTriangle.geometry.vertices[2] = new THREE.Vector3(0, 0, 0);
+
     var geom = new THREE.Geometry();
     var v1 = pointA;
     var v2 = pointB;
@@ -329,6 +363,8 @@ var updateTriangle = false;
 
     scene.add(object);
 
+
+
   }
 
   function createSphere(point) {
@@ -343,31 +379,6 @@ var updateTriangle = false;
     var k = evt ? evt.which : window.event.keyCode;
     if (k == 32) createPoint();
   }
-
-
-
-
-document.onmousemove = getMouseXY;
-
-// Temporary variables to hold mouse x-y pos.s
-var tempX = 0
-var tempY = 0
-
-// Main function to retrieve mouse x-y pos.s
-
-function getMouseXY(e) {
-
-    tempX = e.pageX
-    tempY = e.pageY
-  // catch possible negative values in NS4
-  if (tempX < 0){tempX = 0}
-  if (tempY < 0){tempY = 0}  
-  // show the position values in the form named Show
-  // in the text fields named MouseX and MouseY
-
-  return true
-}
-
 
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -533,6 +544,48 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 }
 
+
+
+function animate() {
+
+  // updating vertice
+
+  activeTriangle.geometry.vertices[2] = new THREE.Vector3(tempX, tempY, 200);
+
+  activeTriangle.geometry.verticesNeedUpdate = true;
+  activeTriangle.geometry.elementsNeedUpdate = true;
+  activeTriangle.geometry.morphTargetsNeedUpdate = true;
+  activeTriangle.geometry.uvsNeedUpdate = true;
+  activeTriangle.geometry.normalsNeedUpdate = true;
+  activeTriangle.geometry.colorsNeedUpdate = true;
+  activeTriangle.geometry.tangentsNeedUpdate = true;
+  activeTriangle.geometry.computeFaceNormals();
+
+
+
+  requestAnimationFrame(animate);
+  controls.update();
+  // 
+  changeControlsIndex;
+  render();
+}
+
+function render() {
+
+  renderer.render(scene, camera);
+  stats.update();
+
+}
+
+
+
+
+document.onmousedown=function(){
+  console.log(activeTriangle);
+};
+
+
+
 function leapToScene(leapPosition) {
   var x = (leapPosition[0] / 300) * SCENE_SIZE
   var y = (((leapPosition[1]) - 200) / 300) * SCENE_SIZE
@@ -556,21 +609,6 @@ function onWindowResize() {
 
 }
 
-function animate() {
-
-  requestAnimationFrame(animate);
-  controls.update();
-  // 
-  changeControlsIndex;
-  render();
-}
-
-function render() {
-
-  renderer.render(scene, camera);
-  stats.update();
-
-}
 
 function changeControlsIndex() {
   if (lastControlsIndex == controlsIndex) {
@@ -644,3 +682,34 @@ function addLights() {
   scene.add(dirLight);
 
 }
+
+
+
+
+
+
+document.onmousemove = getMouseXY;
+
+// Temporary variables to hold mouse x-y pos.s
+var tempX = 0
+var tempY = 0
+
+// Main function to retrieve mouse x-y pos.s
+
+function getMouseXY(e) {
+
+    tempX = e.pageX
+    tempY = e.pageY
+  // catch possible negative values in NS4
+  if (tempX < 0){tempX = 0}
+  if (tempY < 0){tempY = 0}  
+  // show the position values in the form named Show
+  // in the text fields named MouseX and MouseY
+
+  return true
+}
+
+
+
+
+
