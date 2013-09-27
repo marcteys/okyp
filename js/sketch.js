@@ -1,3 +1,55 @@
+
+
+double click exemple 
+
+
+
+
+var timer;
+var firing = false;
+var begen = function(id) {
+    alert('one click');
+};
+
+var popupAc = function(id) {
+    alert('double click');
+};
+
+function cc(id) {
+    if (firing) {
+      clearTimeout(timer);
+        popupAc(id);
+        firing = false;
+        return;
+    }
+    firing = true;
+    timer = setTimeout(function() {
+        begen(id);
+        clearTimeout(timer);
+        firing = false;
+    }, 850);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
       | |               
   ___ | | ___   _ _ __  

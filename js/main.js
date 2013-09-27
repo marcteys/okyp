@@ -132,7 +132,9 @@ scene.add(line);
 
   var matBlue = new THREE.MeshPhongMaterial({
     color: 0x025D8C,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
+    transparent : true,
+    opacity : 0.8
   });
 
   var matOrange = new THREE.MeshPhongMaterial({
@@ -169,6 +171,9 @@ scene.add(line);
   scene.add(sphermesh);
   scene.add(sphermesh2);
 
+
+
+/*
   var geom = new THREE.Geometry();
   var v1 = new THREE.Vector3(0, 0, 0);
   var v2 = new THREE.Vector3(0, 500, 0);
@@ -187,6 +192,9 @@ scene.add(line);
   object.rotation.y = -Math.PI * .5; //triangle is pointing in depth, rotate it -90 degrees on Y
 
   scene.add(object);
+
+
+
 
 
 
@@ -210,7 +218,7 @@ scene.add(line);
   scene.add(object2);
 
 
-
+*/
 
   ///////////////////////////////////////////////////////////////////////////////////////
   //        SCENE UTILS
@@ -224,7 +232,88 @@ scene.add(line);
 
 
 
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        TRIANGLE CREATION  ** I can also create complex shape
+  ///////////////////////////////////////////////////////////////////////////////////////
 
+//
+//
+//To do : Add a point on a tap or a double tap ?
+//
+
+
+  var pointArray = new Array(); // a utilise si je veux sauvegarder
+  var trianglesArray = new Array(); // "  var countTriangles;
+
+  var pointA, pointB, pointC;
+
+  var countPoints = -1;
+
+
+  function createPoint() {
+
+    countPoints++;
+
+    switch (countPoints % 3) {
+      case 0:
+        pointA = new THREE.Vector3( 0, 150, 80 );
+        createSphere(pointA);
+        break;
+      case 1:
+        pointB = new THREE.Vector3( -320, 500, -500 );
+        createSphere(pointB);
+        break;
+      case 2:
+        pointC = new THREE.Vector3( 130, 500, 200 );
+        createSphere(pointC);
+        createTriangle(pointA,pointB,pointC);
+        break;
+    }
+
+
+
+
+  }
+
+  function createTriangle(pointA, pointC, pointC) {
+
+    var geom = new THREE.Geometry();
+    var v1 = pointA;
+    var v2 = pointB;
+    var v3 = pointC;
+
+    geom.vertices.push(v1);
+    geom.vertices.push(v2);
+    geom.vertices.push(v3);
+
+    geom.faces.push(new THREE.Face3(0, 1, 2));
+    geom.computeFaceNormals();
+
+    var object = new THREE.Mesh(geom, matBlue);
+
+
+    scene.add(object);
+
+  }
+
+
+function createSphere(point){
+
+  var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matRed);;
+  sphermesh.position = point;
+  scene.add(sphermesh);
+
+}
+
+  document.onkeypress = function(evt) {
+    var k = evt ? evt.which : window.event.keyCode;
+    if (k == 32) createPoint();
+  }
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        DELETE triangle ? ** use two fingers and leap control obj
+  ///////////////////////////////////////////////////////////////////////////////////////
 
 
   ///////////////////////////////////////////////////////////////////////////////////////
