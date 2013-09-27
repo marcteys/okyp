@@ -257,7 +257,15 @@ scene.add(line);
   var pointA, pointB, pointC;
 
   var countPoints = -1;
+  var proxVal = 200;
 
+/*
+
+Working on : point proximity
+
+
+
+ */
 
 
 
@@ -280,17 +288,40 @@ scene.add(line);
 
   function createPoint() {
 
+
+
+
     countPoints++;
 
     switch (countPoints % 3) {
       case 0:
-        pointA = new THREE.Vector3(tempX, tempY, 80);
-        createSphere(pointA);
+        pointA = new THREE.Vector3(tempX, tempY, 0);
+        pointArray.push(pointA);
+
+        if(proximity(pointA, proxVal)) { // check if there is a value
+          console.log('proche '+proximity(pointA, proxVal));
+          pointA = pointArray[proximity(pointA, proxVal)]; // change the value to the nearest
+          pointArray[pointArray.length-1] = pointA; // change the last id in the array
+        } else {
+          createSphere(pointA);
+        }
+
+
+        // ******  faire pareil pour le mesh mais avec une ligne
         break;
 
       case 1:
-        pointB = new THREE.Vector3(tempX, tempY, -500);
-        createSphere(pointB);
+        pointB = new THREE.Vector3(tempX, tempY, 0);
+        pointArray.push(pointB);
+
+        if(proximity(pointB, proxVal)) {
+          console.log('proche '+proximity(pointB, proxVal));
+          pointB = pointArray[proximity(pointB, proxVal)];
+          pointArray[pointArray.length-1] = pointB;
+        } else {
+          createSphere(pointB);
+        }
+
 
         activeTriangle.geometry.vertices[0] = pointA;
         activeTriangle.geometry.vertices[1] = pointB;
@@ -298,12 +329,46 @@ scene.add(line);
         break;
 
       case 2:
-        pointC = new THREE.Vector3(tempX, tempY, 200);
+        pointC = new THREE.Vector3(tempX, tempY, 0);
+        pointArray.push(pointC);
+
+        if(proximity(pointC, proxVal)) {
+          console.log('proche '+proximity(pointC, proxVal));
+          pointC = pointArray[proximity(pointC, proxVal)];
+          pointArray[pointArray.length-1] = pointC;
+        } else {
+          createSphere(pointC);
+        }
+
         createSphere(pointC);
         createTriangle(pointA, pointB, pointC);
         break;
 
+    } // fin switch
+
+
+
+
+
+
+
+
+
+    //function to determine the nearest value
+    function proximity(vect, val) { 
+
+      var smallest = 1000;
+      var smallId = false;
+
+      for (var i = 0; i < pointArray.length; i++) { // explore all the points
+        if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) < smallest && i > 1 && vect.distanceTo(pointArray[i]) != 0) { // if smaller than the dist, the last smallest and not himself
+          smallest = vect.distanceTo(pointArray[i]); // store the smallest
+          smallId = i;
+        }
+      }
+      return smallId; //return the id else, return false
     }
+
 
 
 
@@ -368,6 +433,7 @@ scene.add(line);
   }
 
   function createSphere(point) {
+
 
     var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matRed);;
     sphermesh.position = point;
@@ -450,12 +516,13 @@ _z: 0
  */
 
 
+/* // TYPE
 console.log("1  " + hands[0].rotation.x);
 var vect = new THREE.Vector3( 5, -9, 2 );
 //hands[0].rotation.setFromAxisAngle(vect, Math.PI / 2);
 console.log("2 " + hands[0].rotation.constructor.toString());
   //Adding "stabilized" result a less reactive interaction
-
+*/
 
 
 
@@ -515,8 +582,6 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
 
-
-
   ///////////////////////////////////////////////////////////////////////////////////////
   //        RENDER
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -545,12 +610,14 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 }
 
 
-
 function animate() {
+
+
+
 
   // updating vertice
 
-  activeTriangle.geometry.vertices[2] = new THREE.Vector3(tempX, tempY, 200);
+  activeTriangle.geometry.vertices[2] = new THREE.Vector3(tempX, tempY, 0);
 
   activeTriangle.geometry.verticesNeedUpdate = true;
   activeTriangle.geometry.elementsNeedUpdate = true;
@@ -581,7 +648,7 @@ function render() {
 
 
 document.onmousedown=function(){
-  console.log(activeTriangle);
+//  console.log(activeTriangle);
 };
 
 
