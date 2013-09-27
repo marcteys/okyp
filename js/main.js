@@ -257,7 +257,7 @@ scene.add(line);
   var pointA, pointB, pointC;
 
   var countPoints = -1;
-  var proxVal = 200;
+  var proxVal = 100;
 
 /*
 
@@ -301,9 +301,10 @@ Working on : point proximity
         if(proximity(pointA, proxVal)) { // check if there is a value
           console.log('proche '+proximity(pointA, proxVal));
           pointA = pointArray[proximity(pointA, proxVal)]; // change the value to the nearest
+        // il doit y avoir un probleme la 
           pointArray[pointArray.length-1] = pointA; // change the last id in the array
         } else {
-          createSphere(pointA);
+          createSphere(pointA); // else create a new sphere
         }
 
 
@@ -322,7 +323,6 @@ Working on : point proximity
           createSphere(pointB);
         }
 
-
         activeTriangle.geometry.vertices[0] = pointA;
         activeTriangle.geometry.vertices[1] = pointB;
 
@@ -340,7 +340,6 @@ Working on : point proximity
           createSphere(pointC);
         }
 
-        createSphere(pointC);
         createTriangle(pointA, pointB, pointC);
         break;
 
@@ -364,6 +363,7 @@ Working on : point proximity
         if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) < smallest && i > 1 && vect.distanceTo(pointArray[i]) != 0) { // if smaller than the dist, the last smallest and not himself
           smallest = vect.distanceTo(pointArray[i]); // store the smallest
           smallId = i;
+          console.log('near '+i+' from '+vect.distanceTo(pointArray[i]));
         }
       }
       return smallId; //return the id else, return false
