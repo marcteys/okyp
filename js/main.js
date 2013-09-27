@@ -46,9 +46,9 @@ animate();
 
 function init() {
 
-///////////////////////////////////////////////////////////////////////////////////////
-//        BASE SETTINGS
-///////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        BASE SETTINGS
+  ///////////////////////////////////////////////////////////////////////////////////////
 
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
@@ -95,13 +95,13 @@ function init() {
   controls.keys = [65, 83, 68];
   controls.addEventListener('change', render);
 
-  
 
-///////////////////////////////////////////////////////////////////////////////////////
-//        BASE SETTINGS
-///////////////////////////////////////////////////////////////////////////////////////
 
-/*
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        BASE SETTINGS
+  ///////////////////////////////////////////////////////////////////////////////////////
+
+  /*
   var whiteLine = new THREE.LineBasicMaterial({
         color: 0x0000ff,
         linewidth: 10
@@ -120,51 +120,30 @@ scene.add(line);
 */
 
 
+  // travail sur les mains 
+  // 
 
 
 
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        MATERIALS
+  ///////////////////////////////////////////////////////////////////////////////////////
 
 
-
-  geometry = new THREE.SphereGeometry(SCENE_SIZE / 30, 8, 8);
-
-  handMaterial = new THREE.MeshBasicMaterial({
-    color: 0xFFFFFF,
-   side: THREE.DoubleSide    
+  var matBlue = new THREE.MeshPhongMaterial({
+    color: 0x025D8C,
+    side: THREE.DoubleSide
   });
 
+  var matOrange = new THREE.MeshPhongMaterial({
+    color: 0xCC3300,
+    side: THREE.DoubleSide
+  });
 
-
-  for (var i = 0; i < 2; i++) {
-    var hand = new THREE.Mesh( new THREE.RingGeometry( 140, 160, 40, 90, 100, Math.PI * 2 ), handMaterial );
-    
-
-    hand.fingers = [];
-
-    for (var j = 0; j < 5; j++) {
-      var finger = new THREE.Mesh(geometry, handMaterial);
-      finger.position.x = SCENE_SIZE * 1000;
-      scene.add(finger);
-      hand.fingers.push(finger);
-    }
-    scene.add(hand);
-    hands.push(hand);
-  }
-
-///////////////////////////////////////////////////////////////////////////////////////
-//        MATERIALS
-///////////////////////////////////////////////////////////////////////////////////////
-
-
-var matBlue = new THREE.MeshPhongMaterial({color: 0x025D8C});
-
-var matOrange = new THREE.MeshPhongMaterial({color: 0xCC3300});
-
-var matRed = new THREE.MeshPhongMaterial({color: 0xC6010A});
-matRed.side = THREE.DoubleSide;
-matBlue.side = THREE.DoubleSide;
-
-
+  var matRed = new THREE.MeshPhongMaterial({
+    color: 0xC6010A,
+    side: THREE.DoubleSide
+  });
 
 
 
@@ -179,11 +158,9 @@ matBlue.side = THREE.DoubleSide;
 
 
 
-
-
-///////////////////////////////////////////////////////////////////////////////////////
-//        SCENE
-///////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        SCENE
+  ///////////////////////////////////////////////////////////////////////////////////////
 
   var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(150, 32, 32), matRed);;
   var sphermesh2 = new THREE.Mesh(new THREE.SphereGeometry(150, 32, 32), matBlue);;
@@ -234,7 +211,11 @@ matBlue.side = THREE.DoubleSide;
 
 
 
-  // Drawing grid
+
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        SCENE UTILS
+  ///////////////////////////////////////////////////////////////////////////////////////
+  
 
   addGrid(1000, 100, 0x000000, 0.2);
 
@@ -243,13 +224,80 @@ matBlue.side = THREE.DoubleSide;
 
 
 
+
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        LEAP
+  ///////////////////////////////////////////////////////////////////////////////////////
+
+
+  geometry = new THREE.SphereGeometry(SCENE_SIZE / 30, 8, 8);
+
+  handMaterial = new THREE.MeshBasicMaterial({
+    color: 0xFFFFFF,
+    side: THREE.DoubleSide
+  });
+
+  fingerMaterial = new THREE.MeshBasicMaterial({
+    color: 0x00FFFF,
+    side: THREE.DoubleSide
+  });
+
+
+
+  for (var i = 0; i < 2; i++) {
+
+
+    var hand = new THREE.Mesh(new THREE.RingGeometry(140, 160, 40, 90, 100, Math.PI * 2), handMaterial);
+
+
+    hand.fingers = [];
+
+    if (hands.length < 2)
+
+      for (var j = 0; j < 5; j++) {
+
+        if (i == 0) var finger = new THREE.Mesh(geometry, fingerMaterial);
+        if (i == 1) var finger = new THREE.Mesh(geometry, handMaterial);
+        finger.position.x = SCENE_SIZE * 1000;
+        scene.add(finger);
+        hand.fingers.push(finger);
+
+      }
+    scene.add(hand);
+    hands.push(hand);
+  }
+
+
+
+
+
+
+
+  //Adding "stabilized" result a less reactive interaction
+
   Leap.loop(function(frame) {
     for (var i = 0; i < 2; i++) {
       if (frame.hands[i]) {
+
+
         hands[i].position = leapToScene(frame.hands[i].palmPosition);
 
+        if (hands.length == 2) {
+          if (hands[0].position.x < hands[1].position.x) {
+            console.log('gauche');
 
-   //     hands[i].rotation.applyEuler(leapToScene(frame.hands[i].palmNormal));
+            hands[0].material.color.setHex(0xff0000);
+          } else if (hands[1].position.x < hands[0].position.x) {
+            hands[0].material.color.setHex(0xffff00);
+                      console.log('droite');
+
+          }
+
+        }
+
+        //   hands[i].rotation.applyEuler(leapToScene(frame.hands[i].palmNormal));
 
         for (var j = 0; j < 5; j++) {
           if (frame.hands[i].fingers[j]) {
@@ -281,7 +329,13 @@ matBlue.side = THREE.DoubleSide;
   });
 
 
-  // renderer
+
+
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        RENDER
+  ///////////////////////////////////////////////////////////////////////////////////////
 
   renderer = new THREE.WebGLRenderer({
     antialias: false
@@ -300,6 +354,9 @@ matBlue.side = THREE.DoubleSide;
   //
 
   window.addEventListener('resize', onWindowResize, false);
+
+
+
 
 }
 
@@ -332,7 +389,7 @@ function animate() {
   requestAnimationFrame(animate);
   controls.update();
   // 
-  changeControlsIndex
+  changeControlsIndex;
   render();
 }
 
@@ -395,10 +452,6 @@ function addGrid(size, step, color, opacity) {
 
 
 function addLights() {
-
-
-  // LIGHTS
-  // 
 
   // nice hipster effect var ambientLight = new THREE.AmbientLight(0x000044);
   var ambientLight = new THREE.AmbientLight(0x222233);
