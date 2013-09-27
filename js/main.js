@@ -304,6 +304,7 @@ Working on : point proximity
         // il doit y avoir un probleme la 
           pointArray[pointArray.length-1] = pointA; // change the last id in the array
         } else {
+          console.log('new point');
           createSphere(pointA); // else create a new sphere
         }
 
@@ -319,7 +320,8 @@ Working on : point proximity
           console.log('proche '+proximity(pointB, proxVal));
           pointB = pointArray[proximity(pointB, proxVal)];
           pointArray[pointArray.length-1] = pointB;
-        } else {
+        } else {          console.log('new point');
+
           createSphere(pointB);
         }
 
@@ -336,7 +338,8 @@ Working on : point proximity
           console.log('proche '+proximity(pointC, proxVal));
           pointC = pointArray[proximity(pointC, proxVal)];
           pointArray[pointArray.length-1] = pointC;
-        } else {
+        } else {          console.log('new point');
+
           createSphere(pointC);
         }
 
@@ -360,7 +363,10 @@ Working on : point proximity
       var smallId = false;
 
       for (var i = 0; i < pointArray.length; i++) { // explore all the points
-        if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) < smallest && i > 1 && vect.distanceTo(pointArray[i]) != 0) { // if smaller than the dist, the last smallest and not himself
+        if (vect.distanceTo(pointArray[i]) < val
+          && vect.distanceTo(pointArray[i]) < smallest
+           && i > 1
+           && vect.distanceTo(pointArray[i]) != 0) { // if smaller than the dist, the last smallest and not himself
           smallest = vect.distanceTo(pointArray[i]); // store the smallest
           smallId = i;
           console.log('near '+i+' from '+vect.distanceTo(pointArray[i]));
