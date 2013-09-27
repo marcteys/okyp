@@ -246,6 +246,9 @@ scene.add(line);
 
 
 
+
+//Adding hands in the scene
+
   for (var i = 0; i < 2; i++) {
 
 
@@ -271,7 +274,18 @@ scene.add(line);
 
 
 
+/*
 
+THREE.Euler {_x: 0, _y: 0, _z: 0, _order: "XYZ", _quaternion: THREE.Quaternion…}
+_order: "XYZ"
+_quaternion: THREE.Quaternion
+_x: 0
+_y: 0
+_z: 0
+
+
+
+ */
 
 
 
@@ -289,6 +303,7 @@ scene.add(line);
             console.log('gauche');
 
             hands[0].material.color.setHex(0xff0000);
+
           } else if (hands[1].position.x < hands[0].position.x) {
             hands[0].material.color.setHex(0xffff00);
                       console.log('droite');
