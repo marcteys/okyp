@@ -276,6 +276,8 @@ scene.add(line);
 
 /*
 
+desired rotation
+
 THREE.Euler {_x: 0, _y: 0, _z: 0, _order: "XYZ", _quaternion: THREE.Quaternion…}
 _order: "XYZ"
 _quaternion: THREE.Quaternion
@@ -285,11 +287,19 @@ _z: 0
 
 
 
+
  */
 
 
-
+console.log("1  " + hands[0].rotation.x);
+var vect = new THREE.Vector3( 5, -9, 2 );
+//hands[0].rotation.setFromAxisAngle(vect, Math.PI / 2);
+console.log("2 " + hands[0].rotation.constructor.toString());
   //Adding "stabilized" result a less reactive interaction
+
+
+
+
 
   Leap.loop(function(frame) {
     for (var i = 0; i < 2; i++) {
