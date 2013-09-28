@@ -251,7 +251,8 @@ scene.add(line);
 ///////////////////////////
 
   for (var i = 0; i < 2; i++) {
-var hand;
+    var hand;
+
      hand = new THREE.Mesh(new THREE.RingGeometry(140, 160, 40, 90, 100, Math.PI * 2), handMaterial);
 
 // idee deco main : deux double anneaux en plus, pour simuler le poignet
@@ -299,8 +300,6 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
 
-
-
   Leap.loop({enableGestures: true}, function(frame) {
 
     /////////////////
@@ -309,10 +308,15 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
     for (var i = 0; i < 2; i++) {
       if (frame.hands[i]) {
-           hands[i].position = leapToScene(frame.hands[i].palmPosition);
+         hands[i].position = leapToScene(frame.hands[i].palmPosition);
 
+hands[i].rotation.x = (90 * Math.PI / 180) - frame.hands[i].palmNormal[2];
+hands[i].rotation.y =  frame.hands[i].palmNormal[0];
+hands[i].rotation.z = frame.hands[i].palmNormal[1];//useless
 
-
+document.onmousedown=function(){
+console.log(frame.hands[0].palmNormal);
+};
 
         //////////////////////inverser ////////////////////////////////
         if (hands.length == 2) {
@@ -338,7 +342,6 @@ return;
 
 
 
-        //   hands[i].rotation.applyEuler(leapToScene(frame.hands[i].palmNormal));
 
         for (var j = 0; j < 5; j++) {
           if (frame.hands[i].fingers[j]) {
@@ -453,7 +456,18 @@ return;
 
 
 
-}
+} // fin init()
+
+
+
+
+document.onmousedown=function(){
+//console.log(hands[0].rotation.x);
+};
+
+
+
+
 
 
 function leapToScene(leapPosition) {
@@ -461,6 +475,14 @@ function leapToScene(leapPosition) {
   var y = (((leapPosition[1]) - 200) / 300) * SCENE_SIZE
   var z = (leapPosition[2] / 300) * SCENE_SIZE
   var toReturn = new THREE.Vector3(x, y, z)
+  return toReturn
+}
+
+function leapRotToScene(leapPosition) {
+  var x = (leapPosition[0] / 300) * SCENE_SIZE
+  var y = (((leapPosition[1]) - 200) / 300) * SCENE_SIZE
+  var z = (leapPosition[2] / 300) * SCENE_SIZE
+  var toReturn = new THREE.Euler(x, y, z, 'XYZ')
   return toReturn
 }
 
