@@ -246,14 +246,15 @@ scene.add(line);
 
 
 
-
+////////////////////////////
 //Adding hands in the scene
+///////////////////////////
 
   for (var i = 0; i < 2; i++) {
+var hand;
+     hand = new THREE.Mesh(new THREE.RingGeometry(140, 160, 40, 90, 100, Math.PI * 2), handMaterial);
 
-
-    var hand = new THREE.Mesh(new THREE.RingGeometry(140, 160, 40, 90, 100, Math.PI * 2), handMaterial);
-
+// idee deco main : deux double anneaux en plus, pour simuler le poignet
 
     hand.fingers = [];
 
@@ -290,7 +291,6 @@ _z: 0
 
  */
 
-
 console.log("1  " + hands[0].rotation.x);
 var vect = new THREE.Vector3( 5, -9, 2 );
 //hands[0].rotation.setFromAxisAngle(vect, Math.PI / 2);
@@ -301,26 +301,42 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
 
-  Leap.loop(function(frame) {
+  Leap.loop({enableGestures: true}, function(frame) {
+
+    /////////////////
+    // MAIN 
+    /////////////////
+
     for (var i = 0; i < 2; i++) {
       if (frame.hands[i]) {
+           hands[i].position = leapToScene(frame.hands[i].palmPosition);
 
 
-        hands[i].position = leapToScene(frame.hands[i].palmPosition);
 
+
+        //////////////////////inverser ////////////////////////////////
         if (hands.length == 2) {
           if (hands[0].position.x < hands[1].position.x) {
-            console.log('gauche');
+        //    console.log('gauche');
 
             hands[0].material.color.setHex(0xff0000);
 
           } else if (hands[1].position.x < hands[0].position.x) {
-            hands[0].material.color.setHex(0xffff00);
-                      console.log('droite');
+          //  console.log(hands);
+           // hands.reverse();
+                  //      console.log('droite');
+return;
 
+/*
+            hands[0].material.color.setHex(0xffff00);
+            console.log('droite');
+*/
           }
 
         }
+
+
+
 
         //   hands[i].rotation.applyEuler(leapToScene(frame.hands[i].palmNormal));
 
@@ -338,8 +354,9 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
     }
 
-
-
+    /////////////////
+    // CAMERA CONTROL
+    /////////////////
     if (index == -1) {
       cameraControls.update(frame);
     } else {
@@ -351,7 +368,60 @@ console.log("2 " + hands[0].rotation.constructor.toString());
     coords2.position = cameraControls.target;
     coords3.position = cameraControls.target;
 
-  });
+
+
+    /////////////////
+    // GESTURE
+    /////////////////
+
+    var gestures = frame.gestures,
+      circle,
+      pointable,
+      direction,
+      normal;
+
+
+
+    if (gestures.length > 0) {
+      // In this example we will focus only on the first gesture, for the sake of simplicity
+      if (gestures[0].type == 'circle') {
+        console.log('circle');
+        circle = gestures[0];
+        // Get Pointable object
+        circle.pointable = frame.pointable(circle.pointableIds[0]);
+        // Reset circle gesture variables as nedded, not really necessary in this case
+        if (circle.state == 'start') {
+          clockwise = true;
+        } else if (circle.state == 'update') {
+          direction = circle.pointable.direction;
+          // Check if pointable exists
+          if (direction) {
+            normal = circle.normal;
+            // Check if product of vectors is going forwards or backwards
+            // Since Leap uses a right hand rule system
+            // forward is into the screen, while backwards is out of it
+            clockwise = Leap.vec3.dot(direction, normal) > 0;
+            if (clockwise) {
+              //Do clockwose stuff
+            } else {
+              //Do counterclockwise stuff
+            }
+          }
+        }
+      } // fin gesture circle
+      
+
+      if (gestures[0].type == 'keyTap') {
+              console.log('tap');
+      }
+
+
+    }// fin gesture detection
+
+
+
+
+  });// fin leap loop
 
 
 
@@ -414,7 +484,7 @@ function animate() {
   requestAnimationFrame(animate);
   controls.update();
   // 
-  changeControlsIndex;
+//  changeControlsIndex;
   render();
 }
 
@@ -424,20 +494,6 @@ function render() {
   stats.update();
 
 }
-
-function changeControlsIndex() {
-  if (lastControlsIndex == controlsIndex) {
-    if (index != controlsIndex && controlsIndex > -2) {
-      // new object or camera to control
-      if (controlsIndex > -2) {
-        if (index > -1) objects[index].material.color.setHex(0xefefef);
-        index = controlsIndex;
-        if (index > -1) objects[index].material.color.setHex(0xff0000);
-      }
-    };
-  };
-  lastControlsIndex = controlsIndex;
-};
 
 
 
