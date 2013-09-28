@@ -297,7 +297,6 @@ Working on : point proximity
 
     scene.add(activeLine);
 
-console.log(activeLine);
 
 
 
@@ -341,7 +340,7 @@ console.log(activeLine);
 
           createSphere(pointB);
         }
-
+    activeLine.geometry.vertices[0] = activeLine.geometry.vertices[1] = new THREE.Vector3( 0, 0, 0 );
         activeTriangle.geometry.vertices[0] = pointA;
         activeTriangle.geometry.vertices[1] = pointB;
 
@@ -640,6 +639,7 @@ function animate() {
 
 
 
+  activeTriangle.geometry.vertices[2] = new THREE.Vector3(tempX, tempY, 0);
 
   // updating vertice
   activeTriangle.geometry.verticesNeedUpdate = true;
@@ -651,17 +651,14 @@ function animate() {
   activeTriangle.geometry.tangentsNeedUpdate = true;
   activeTriangle.geometry.computeFaceNormals();
 
-  activeTriangle.geometry.vertices[2] = new THREE.Vector3(tempX, tempY, 0);
 
 
+
+
+    activeLine.geometry.verticesNeedUpdate = true;
 
 if(countPoints%3 == 0) {
-    activeLine.geometry.verticesNeedUpdate = true;
     activeLine.geometry.vertices[1] = new THREE.Vector3(tempX, tempY, 0);
-} else {
-    activeLine.geometry.vertices[0] = activeLine.geometry.vertices[1] = new THREE.Vector3( 0, 0, 0 );
-    activeLine.geometry.verticesNeedUpdate = false;
-
 }
 
 
