@@ -466,6 +466,8 @@ if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) !== 0
 
   }
 
+
+
   document.onkeypress = function(evt) {
     var k = evt ? evt.which : window.event.keyCode;
     if (k == 32) createPoint();
