@@ -46,7 +46,11 @@ animate();
 
 
 
+
+//ajout de nouveaux points
 var activeTriangle;
+var activeLine;
+var countPoints = -1;
 
 function init() {
 
@@ -256,7 +260,6 @@ scene.add(line);
 
   var pointA, pointB, pointC;
 
-  var countPoints = -1;
   var proxVal = 100;
 
 /*
@@ -278,9 +281,24 @@ Working on : point proximity
     geom.faces.push(new THREE.Face3(0, 1, 2));
     geom.computeFaceNormals();
     activeTriangle = new THREE.Mesh(geom, matBlue);
-     activeTriangle.geometry.verticesNeedUpdate = true;
 
     scene.add(activeTriangle);
+
+
+
+    var geomLine = new THREE.Geometry();
+
+    geomLine.vertices.push(new THREE.Vector3( 0, 0, 0 ));
+    geomLine.vertices.push(new THREE.Vector3( 0, 0, 0 ));
+
+    activeLine = new THREE.Line(geomLine, new THREE.LineBasicMaterial({
+      color : 0x000000}
+      ));
+
+    scene.add(activeLine);
+
+console.log(activeLine);
+
 
 
 
@@ -299,7 +317,6 @@ Working on : point proximity
         pointArray.push(pointA);
 
         if(proximity(pointA, proxVal)) { // check if there is a value
-          console.log('proche '+proximity(pointA, proxVal));
           pointA = pointArray[proximity(pointA, proxVal)]; // change the value to the nearest
         // il doit y avoir un probleme la 
           pointArray[pointArray.length-1] = pointA; // change the last id in the array
@@ -307,6 +324,7 @@ Working on : point proximity
           console.log('new point');
           createSphere(pointA); // else create a new sphere
         }
+        activeLine.geometry.vertices[0] = pointA;
 
 
         // ******  faire pareil pour le mesh mais avec une ligne
@@ -317,7 +335,6 @@ Working on : point proximity
         pointArray.push(pointB);
 
         if(proximity(pointB, proxVal)) {
-          console.log('proche '+proximity(pointB, proxVal));
           pointB = pointArray[proximity(pointB, proxVal)];
           pointArray[pointArray.length-1] = pointB;
         } else {          console.log('new point');
@@ -335,7 +352,6 @@ Working on : point proximity
         pointArray.push(pointC);
 
         if(proximity(pointC, proxVal)) {
-          console.log('proche '+proximity(pointC, proxVal));
           pointC = pointArray[proximity(pointC, proxVal)];
           pointArray[pointArray.length-1] = pointC;
         } else {          console.log('new point');
@@ -359,18 +375,22 @@ Working on : point proximity
     //function to determine the nearest value
     function proximity(vect, val) { 
 
-      var smallest = 1000;
+      var smallest = 2000;
       var smallId = false;
 
-      for (var i = 0; i < pointArray.length; i++) { // explore all the points
+      for (var i = 0; i < pointArray.length-1; i++) { // explore all the points
+if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) !== 0) console.log( i +' near!!');
         if (vect.distanceTo(pointArray[i]) < val
           && vect.distanceTo(pointArray[i]) < smallest
-           && i > 1
-           && vect.distanceTo(pointArray[i]) != 0) { // if smaller than the dist, the last smallest and not himself
+          ) { // if smaller than the dist, the last smallest and not himself
+          console.log('passage dans la boucle');
           smallest = vect.distanceTo(pointArray[i]); // store the smallest
           smallId = i;
-          console.log('near '+i+' from '+vect.distanceTo(pointArray[i]));
+       //   console.log('near '+i+' from '+vect.distanceTo(pointArray[i]));
+
         }
+              console.log('point ' +i + ', dist '  + vect.distanceTo(pointArray[i]) +' | small id ' + smallId + ', snallest dist ' + smallest);
+
       }
       return smallId; //return the id else, return false
     }
@@ -622,9 +642,6 @@ function animate() {
 
 
   // updating vertice
-
-  activeTriangle.geometry.vertices[2] = new THREE.Vector3(tempX, tempY, 0);
-
   activeTriangle.geometry.verticesNeedUpdate = true;
   activeTriangle.geometry.elementsNeedUpdate = true;
   activeTriangle.geometry.morphTargetsNeedUpdate = true;
@@ -634,6 +651,18 @@ function animate() {
   activeTriangle.geometry.tangentsNeedUpdate = true;
   activeTriangle.geometry.computeFaceNormals();
 
+  activeTriangle.geometry.vertices[2] = new THREE.Vector3(tempX, tempY, 0);
+
+
+
+if(countPoints%3 == 0) {
+    activeLine.geometry.verticesNeedUpdate = true;
+    activeLine.geometry.vertices[1] = new THREE.Vector3(tempX, tempY, 0);
+} else {
+    activeLine.geometry.vertices[0] = activeLine.geometry.vertices[1] = new THREE.Vector3( 0, 0, 0 );
+    activeLine.geometry.verticesNeedUpdate = false;
+
+}
 
 
   requestAnimationFrame(animate);
