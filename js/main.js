@@ -19,7 +19,12 @@ deux doigts pour modéliser
 exemple rotation : voxel paint
 exemple ;isc control transform
 
-d
+///metre en rouge les points actuels et en blanc(bleu ?) les points des autres tris
+
+
+//amélioration : faire petit shcéma des mains pour voir quels doigts sont actifs ! (a mettre en couleur, vert ou rouge)
+
+
 */
 
 
@@ -40,6 +45,7 @@ var cross;
 var clock, geometry, material, mesh, controller, hands = [];
 
 var SCENE_SIZE = 1000;
+var activeFinger ;
 
 init();
 animate();
@@ -78,7 +84,7 @@ function init() {
   cameraControls.panEnabled = true;
   cameraControls.panSpeed = 2;
   cameraControls.panHands = 2;
-  cameraControls.panFingers = [6, 12];
+  cameraControls.panFingers = [6, 10];
   cameraControls.panRightHanded = false; // for left-handed person
 
 
@@ -277,29 +283,13 @@ scene.add(line);
 
 
 /*
-
-desired rotation
-
-THREE.Euler {_x: 0, _y: 0, _z: 0, _order: "XYZ", _quaternion: THREE.Quaternion…}
-_order: "XYZ"
-_quaternion: THREE.Quaternion
-_x: 0
-_y: 0
-_z: 0
-
-
-
-
- */
-
 console.log("1  " + hands[0].rotation.x);
 var vect = new THREE.Vector3( 5, -9, 2 );
 //hands[0].rotation.setFromAxisAngle(vect, Math.PI / 2);
 console.log("2 " + hands[0].rotation.constructor.toString());
   //Adding "stabilized" result a less reactive interaction
 
-
-
+*/
   Leap.loop({enableGestures: true}, function(frame) {
 
     /////////////////
@@ -314,9 +304,6 @@ hands[i].rotation.x = (90 * Math.PI / 180) - frame.hands[i].palmNormal[2];
 hands[i].rotation.y =  frame.hands[i].palmNormal[0];
 hands[i].rotation.z = frame.hands[i].palmNormal[1];//useless
 
-document.onmousedown=function(){
-console.log(frame.hands[0].palmNormal);
-};
 
         //////////////////////inverser ////////////////////////////////
         if (hands.length == 2) {
@@ -329,7 +316,7 @@ console.log(frame.hands[0].palmNormal);
           //  console.log(hands);
            // hands.reverse();
                   //      console.log('droite');
-return;
+            return;
 
 /*
             hands[0].material.color.setHex(0xffff00);
@@ -344,10 +331,19 @@ return;
 
 
         for (var j = 0; j < 5; j++) {
+
           if (frame.hands[i].fingers[j]) {
+
             hands[i].fingers[j].position = leapToScene(frame.hands[i].fingers[j].tipPosition);
+            
+            if(frame.hands[1]) {
+                          activeFinger = frame.hands[1].fingers[0];
+
+            }
+
           } else {
             hands[i].fingers[j].position.x = SCENE_SIZE * 1000;
+
           }
         }
       } else {
@@ -423,7 +419,6 @@ return;
 
 
 
-
   });// fin leap loop
 
 
@@ -462,7 +457,8 @@ return;
 
 
 document.onmousedown=function(){
-//console.log(hands[0].rotation.x);
+              console.log(leapToScene(activeFinger.tipPosition));
+
 };
 
 
@@ -477,15 +473,6 @@ function leapToScene(leapPosition) {
   var toReturn = new THREE.Vector3(x, y, z)
   return toReturn
 }
-
-function leapRotToScene(leapPosition) {
-  var x = (leapPosition[0] / 300) * SCENE_SIZE
-  var y = (((leapPosition[1]) - 200) / 300) * SCENE_SIZE
-  var z = (leapPosition[2] / 300) * SCENE_SIZE
-  var toReturn = new THREE.Euler(x, y, z, 'XYZ')
-  return toReturn
-}
-
 
 
 function onWindowResize() {
