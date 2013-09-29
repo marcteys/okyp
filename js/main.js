@@ -395,17 +395,12 @@ Working on : point proximity
       var smallId = false;
 
       for (var i = 0; i < pointArray.length-1; i++) { // explore all the points
-if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) !== 0) console.log( i +' near!!');
-        if (vect.distanceTo(pointArray[i]) < val
-          && vect.distanceTo(pointArray[i]) < smallest
-          ) { // if smaller than the dist, the last smallest and not himself
-          console.log('passage dans la boucle');
+        if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) < smallest ) { // if smaller than the dist, the last smallest and not himself
           smallest = vect.distanceTo(pointArray[i]); // store the smallest
           smallId = i;
-       //   console.log('near '+i+' from '+vect.distanceTo(pointArray[i]));
 
         }
-              console.log('point ' +i + ', dist '  + vect.distanceTo(pointArray[i]) +' | small id ' + smallId + ', snallest dist ' + smallest);
+            //  console.log('point ' +i + ', dist '  + vect.distanceTo(pointArray[i]) +' | small id ' + smallId + ', snallest dist ' + smallest);
 
       }
       return smallId; //return the id else, return false
@@ -473,9 +468,7 @@ if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) !== 0
 
 
       for(var i = sphereArray.length; i > sphereArray.length-3; i-- ) {
-
-
-     sphereArray[i-1].material = matWhite;
+            sphereArray[i-1].material = matWhite;
       }
 
   }
