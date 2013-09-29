@@ -46,7 +46,7 @@ var clock, geometry, material, mesh, controller, hands = [];
 
 var SCENE_SIZE = 1000;
 var activeFinger ;
-
+var leftHandId, rightHandId;
 init();
 animate();
 
@@ -291,7 +291,10 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 */
   Leap.loop({enableGestures: true}, function(frame) {
+    document.onmousedown=function(){
 
+console.log(frame);
+}
     /////////////////
     // MAIN 
     /////////////////
@@ -304,6 +307,8 @@ hands[i].rotation.x = (90 * Math.PI / 180) - frame.hands[i].palmNormal[2];
 hands[i].rotation.y =  frame.hands[i].palmNormal[0];
 hands[i].rotation.z = frame.hands[i].palmNormal[1];//useless
 
+leftHandId = frame.hands[0].id;
+ if (frame.hands[1]) rightHandId = frame.hands[1].id;
 
         //////////////////////inverser ////////////////////////////////
         if (hands.length == 2) {
@@ -328,8 +333,6 @@ hands[i].rotation.z = frame.hands[i].palmNormal[1];//useless
 
 
 
-
-
         for (var j = 0; j < 5; j++) {
 
           if (frame.hands[i].fingers[j]) {
@@ -337,7 +340,7 @@ hands[i].rotation.z = frame.hands[i].palmNormal[1];//useless
             hands[i].fingers[j].position = leapToScene(frame.hands[i].fingers[j].tipPosition);
             
             if(frame.hands[1]) {
-                          activeFinger = frame.hands[1].fingers[0];
+                 activeFinger = frame.hands[1].fingers[0];
 
             }
 
@@ -411,7 +414,9 @@ hands[i].rotation.z = frame.hands[i].palmNormal[1];//useless
       
 
       if (gestures[0].type == 'keyTap') {
-              console.log('tap');
+              if(leftHandId == gestures[0].handIds) {
+                console.log('tapmaingauche');
+              }
       }
 
 
