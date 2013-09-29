@@ -314,11 +314,13 @@ Working on : point proximity
       case 0:
         pointA = new THREE.Vector3(tempX, tempY, 0);
         pointArray.push(pointA);
-
-        if(proximity(pointA, proxVal)) { // check if there is a value
+        console.log(pointArray[0]);
+        if(proximity(pointA, proxVal) !== false) { // check if there is a value
           pointA = pointArray[proximity(pointA, proxVal)]; // change the value to the nearest
         // il doit y avoir un probleme la 
           pointArray[pointArray.length-1] = pointA; // change the last id in the array
+                  console.log(pointArray[0]);
+
         } else {
           console.log('new point');
           createSphere(pointA); // else create a new sphere
@@ -333,7 +335,7 @@ Working on : point proximity
         pointB = new THREE.Vector3(tempX, tempY, 0);
         pointArray.push(pointB);
 
-        if(proximity(pointB, proxVal)) {
+        if(proximity(pointB, proxVal) !== false) {
           pointB = pointArray[proximity(pointB, proxVal)];
           pointArray[pointArray.length-1] = pointB;
         } else {          console.log('new point');
@@ -350,7 +352,7 @@ Working on : point proximity
         pointC = new THREE.Vector3(tempX, tempY, 0);
         pointArray.push(pointC);
 
-        if(proximity(pointC, proxVal)) {
+        if(proximity(pointC, proxVal) !== false) {
           pointC = pointArray[proximity(pointC, proxVal)];
           pointArray[pointArray.length-1] = pointC;
         } else {          console.log('new point');
