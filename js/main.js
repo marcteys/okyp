@@ -159,6 +159,13 @@ scene.add(line);
     opacity : 0.8
   });
 
+  var matWhite = new THREE.MeshPhongMaterial({
+    color: 0xFFFFFF,
+    side: THREE.DoubleSide,
+    transparent : true,
+    opacity : 0.8
+  });
+
 
 
   var origin = new THREE.Vector3(0, 0, 0);
@@ -262,6 +269,7 @@ scene.add(line);
 
   var proxVal = 100;
 
+  var sphereArray = new Array();
 /*
 
 Working on : point proximity
@@ -307,6 +315,7 @@ Working on : point proximity
 
 
 
+  var smallId; // change at each new point.
 
     countPoints++;
 
@@ -314,13 +323,13 @@ Working on : point proximity
       case 0:
         pointA = new THREE.Vector3(tempX, tempY, 0);
         pointArray.push(pointA);
-        console.log(pointArray[0]);
-        if(proximity(pointA, proxVal) !== false) { // check if there is a value
-          pointA = pointArray[proximity(pointA, proxVal)]; // change the value to the nearest
+
+        smallId = proximity(pointA, proxVal);
+        if(smallId !== false) { // check if there is a value
+          pointA = pointArray[smallId]; // change the value to the nearest
         // il doit y avoir un probleme la 
           pointArray[pointArray.length-1] = pointA; // change the last id in the array
-                  console.log(pointArray[0]);
-
+          sphereArray[smallId].material = matRed;
         } else {
           console.log('new point');
           createSphere(pointA); // else create a new sphere
@@ -335,11 +344,14 @@ Working on : point proximity
         pointB = new THREE.Vector3(tempX, tempY, 0);
         pointArray.push(pointB);
 
-        if(proximity(pointB, proxVal) !== false) {
-          pointB = pointArray[proximity(pointB, proxVal)];
+        smallId = proximity(pointB, proxVal);
+        if(smallId !== false) {
+          pointB = pointArray[smallId];
           pointArray[pointArray.length-1] = pointB;
-        } else {          console.log('new point');
+          sphereArray[smallId].material = matRed;
 
+        } else {
+          console.log('new point');
           createSphere(pointB);
         }
     activeLine.geometry.vertices[0] = activeLine.geometry.vertices[1] = new THREE.Vector3( 0, 0, 0 );
@@ -352,11 +364,14 @@ Working on : point proximity
         pointC = new THREE.Vector3(tempX, tempY, 0);
         pointArray.push(pointC);
 
-        if(proximity(pointC, proxVal) !== false) {
-          pointC = pointArray[proximity(pointC, proxVal)];
+        smallId = proximity(pointC, proxVal)
+        if(smallId !== false) {
+          pointC = pointArray[smallId];
           pointArray[pointArray.length-1] = pointC;
-        } else {          console.log('new point');
+          sphereArray[smallId].material = matRed;
 
+        } else {
+          console.log('new point');
           createSphere(pointC);
         }
 
@@ -457,6 +472,12 @@ if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) !== 0
 
 
 
+      for(var i = sphereArray.length; i > sphereArray.length-3; i-- ) {
+
+
+     sphereArray[i-1].material = matWhite;
+      }
+
   }
 
   function createSphere(point) {
@@ -465,6 +486,7 @@ if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) !== 0
     var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matRed);;
     sphermesh.position = point;
     scene.add(sphermesh);
+    sphereArray.push(sphermesh);
 
   }
 
