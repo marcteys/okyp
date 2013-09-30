@@ -45,11 +45,10 @@ var cross;
 var clock, geometry, material, mesh, controller, hands = [];
 
 var SCENE_SIZE = 1000;
-var activeFinger ;
+var activeFinger = new THREE.Vector3( 0, 0, 0 );
 var leftHandId, rightHandId;
 init();
 animate();
-
 
 
 
@@ -147,29 +146,29 @@ scene.add(line);
   var matBlue = new THREE.MeshPhongMaterial({
     color: 0x025D8C,
     side: THREE.DoubleSide,
-    transparent : true,
-    opacity : 0.8
+    transparent: true,
+    opacity: 0.8
   });
 
   var matOrange = new THREE.MeshPhongMaterial({
     color: 0xCC3300,
     side: THREE.DoubleSide,
-    transparent : true,
-    opacity : 0.8
+    transparent: true,
+    opacity: 0.8
   });
 
   var matRed = new THREE.MeshPhongMaterial({
     color: 0xC6010A,
     side: THREE.DoubleSide,
-    transparent : true,
-    opacity : 0.8
+    transparent: true,
+    opacity: 0.8
   });
 
   var matWhite = new THREE.MeshPhongMaterial({
     color: 0xFFFFFF,
     side: THREE.DoubleSide,
-    transparent : true,
-    opacity : 0.8
+    transparent: true,
+    opacity: 0.8
   });
 
 
@@ -195,11 +194,11 @@ scene.add(line);
   sphermesh.position.x = -tempX;
 
   scene.add(sphermesh);
- // scene.add(sphermesh2);
+  // scene.add(sphermesh2);
 
 
 
-/*
+  /*
   var geom = new THREE.Geometry();
   var v1 = new THREE.Vector3(0, 0, 0);
   var v2 = new THREE.Vector3(0, 500, 0);
@@ -249,7 +248,7 @@ scene.add(line);
   ///////////////////////////////////////////////////////////////////////////////////////
   //        SCENE UTILS
   ///////////////////////////////////////////////////////////////////////////////////////
-  
+
 
   addGrid(1000, 100, 0x000000, 0.2);
 
@@ -262,10 +261,10 @@ scene.add(line);
   //        TRIANGLE CREATION  ** I can also create complex shape
   ///////////////////////////////////////////////////////////////////////////////////////
 
-//
-//
-//To do : Add a point on a tap or a double tap ?
-//
+  //
+  //
+  //To do : Add a point on a tap or a double tap ?
+  //
 
 
   var pointArray = new Array(); // a utilise si je veux sauvegarder
@@ -276,7 +275,7 @@ scene.add(line);
   var proxVal = 100;
 
   var sphereArray = new Array();
-/*
+  /*
 
 Working on : point proximity
 
@@ -288,32 +287,28 @@ Working on : point proximity
 
   var geom = new THREE.Geometry();
 
-    geom.vertices.push(new THREE.Vector3( 0, 0, 0 ));
-    geom.vertices.push(new THREE.Vector3( 0, 0, 0 ));
-    geom.vertices.push(new THREE.Vector3( 0, 0, 0 ));
+  geom.vertices.push(new THREE.Vector3(0, 0, 0));
+  geom.vertices.push(new THREE.Vector3(0, 0, 0));
+  geom.vertices.push(new THREE.Vector3(0, 0, 0));
 
-    geom.faces.push(new THREE.Face3(0, 1, 2));
-    geom.computeFaceNormals();
-    activeTriangle = new THREE.Mesh(geom, matBlue);
+  geom.faces.push(new THREE.Face3(0, 1, 2));
+  geom.computeFaceNormals();
+  activeTriangle = new THREE.Mesh(geom, matBlue);
 
-    scene.add(activeTriangle);
-
-
-
-    var geomLine = new THREE.Geometry();
-
-    geomLine.vertices.push(new THREE.Vector3( 0, 0, 0 ));
-    geomLine.vertices.push(new THREE.Vector3( 0, 0, 0 ));
-
-    activeLine = new THREE.Line(geomLine, new THREE.LineBasicMaterial({
-      color : 0x000000}
-      ));
-
-    scene.add(activeLine);
+  scene.add(activeTriangle);
 
 
 
+  var geomLine = new THREE.Geometry();
 
+  geomLine.vertices.push(new THREE.Vector3(0, 0, 0));
+  geomLine.vertices.push(new THREE.Vector3(0, 0, 0));
+
+  activeLine = new THREE.Line(geomLine, new THREE.LineBasicMaterial({
+    color: 0x000000
+  }));
+
+  scene.add(activeLine);
 
 
 
@@ -321,20 +316,20 @@ Working on : point proximity
 
 
 
-  var smallId; // change at each new point.
+    var smallId; // change at each new point.
 
     countPoints++;
 
     switch (countPoints % 3) {
       case 0:
-        pointA = new THREE.Vector3(tempX, tempY, 0);
+        pointA = activeFinger;
         pointArray.push(pointA);
 
         smallId = proximity(pointA, proxVal);
-        if(smallId !== false) { // check if there is a value
+        if (smallId !== false) { // check if there is a value
           pointA = pointArray[smallId]; // change the value to the nearest
-        // il doit y avoir un probleme la 
-          pointArray[pointArray.length-1] = pointA; // change the last id in the array
+          // il doit y avoir un probleme la 
+          pointArray[pointArray.length - 1] = pointA; // change the last id in the array
           sphereArray.push(' ');
 
           sphereArray[smallId].material = matRed;
@@ -347,37 +342,37 @@ Working on : point proximity
         break;
 
       case 1:
-        pointB = new THREE.Vector3(tempX, tempY, 0);
+        pointB = activeFinger;
         pointArray.push(pointB);
 
         smallId = proximity(pointB, proxVal);
-        if(smallId !== false) {
+        if (smallId !== false) {
           pointB = pointArray[smallId];
-          pointArray[pointArray.length-1] = pointB;
+          pointArray[pointArray.length - 1] = pointB;
           sphereArray.push(' ');
-           sphereArray[smallId].material = matRed;
+          sphereArray[smallId].material = matRed;
 
         } else {
           console.log('new point');
           createSphere(pointB);
         }
-    activeLine.geometry.vertices[0] = activeLine.geometry.vertices[1] = new THREE.Vector3( 0, 0, 0 );
+        activeLine.geometry.vertices[0] = activeLine.geometry.vertices[1] = new THREE.Vector3(0, 0, 0);
         activeTriangle.geometry.vertices[0] = pointA;
         activeTriangle.geometry.vertices[1] = pointB;
 
         break;
 
       case 2:
-        pointC = new THREE.Vector3(tempX, tempY, 0);
+        pointC = activeFinger;
         pointArray.push(pointC);
 
         smallId = proximity(pointC, proxVal);
-        if(smallId !== false) {
+        if (smallId !== false) {
           pointC = pointArray[smallId];
-          pointArray[pointArray.length-1] = pointC;
+          pointArray[pointArray.length - 1] = pointC;
           sphereArray.push(' ');
 
-           sphereArray[smallId].material = matRed;
+          sphereArray[smallId].material = matRed;
 
         } else {
           console.log('new point');
@@ -391,37 +386,27 @@ Working on : point proximity
 
 
 
-
-
-
-
-
-
-
-
-
   }
 
 
-    //function to determine the nearest value
-    function proximity(vect, val) { 
+  //function to determine the nearest value
 
-      var smallest = 2000;
-      var smallId = false;
+  function proximity(vect, val) {
 
-      for (var i = 0; i < pointArray.length-1; i++) { // explore all the points
-        if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) < smallest ) { // if smaller than the dist, the last smallest and not himself
-          smallest = vect.distanceTo(pointArray[i]); // store the smallest
-          smallId = i;
+    var smallest = 2000;
+    var smallId = false;
 
-        }
-            //  console.log('point ' +i + ', dist '  + vect.distanceTo(pointArray[i]) +' | small id ' + smallId + ', snallest dist ' + smallest);
+    for (var i = 0; i < pointArray.length - 1; i++) { // explore all the points
+      if (vect.distanceTo(pointArray[i]) < val && vect.distanceTo(pointArray[i]) < smallest) { // if smaller than the dist, the last smallest and not himself
+        smallest = vect.distanceTo(pointArray[i]); // store the smallest
+        smallId = i;
 
       }
-      return smallId; //return the id else, return false
+      //  console.log('point ' +i + ', dist '  + vect.distanceTo(pointArray[i]) +' | small id ' + smallId + ', snallest dist ' + smallest);
+
     }
-
-
+    return smallId; //return the id else, return false
+  }
 
 
 
@@ -473,28 +458,24 @@ Working on : point proximity
     scene.add(object);
 
 
-console.log(sphereArray);
-console.log(pointArray);
-
-
 
     //not optimized at all...
-    if(proximity(pointA, proxVal) !== false) {
+    if (proximity(pointA, proxVal) !== false) {
       sphereArray[proximity(pointA, proxVal)].material = matWhite;
     } else {
-      sphereArray[sphereArray.length-3].material = matWhite;
+      sphereArray[sphereArray.length - 3].material = matWhite;
     }
-       if(proximity(pointB, proxVal) !== false) {
+    if (proximity(pointB, proxVal) !== false) {
       sphereArray[proximity(pointB, proxVal)].material = matWhite;
     } else {
-      sphereArray[sphereArray.length-2].material = matWhite;
+      sphereArray[sphereArray.length - 2].material = matWhite;
     }
-       if(proximity(pointC, proxVal) !== false) {
+    if (proximity(pointC, proxVal) !== false) {
       sphereArray[proximity(pointC, proxVal)].material = matWhite;
     } else {
-      sphereArray[sphereArray.length-1].material = matWhite;
+      sphereArray[sphereArray.length - 1].material = matWhite;
     }
-   
+
 
 
   }
@@ -505,7 +486,7 @@ console.log(pointArray);
     sphermesh.position = point;
     scene.add(sphermesh);
 
-   sphereArray.push(sphermesh);
+    sphereArray.push(sphermesh);
 
   }
 
@@ -526,7 +507,6 @@ console.log(pointArray);
   //        LEAP
   ///////////////////////////////////////////////////////////////////////////////////////
 
-
   geometry = new THREE.SphereGeometry(SCENE_SIZE / 30, 8, 8);
 
   handMaterial = new THREE.MeshBasicMaterial({
@@ -541,16 +521,16 @@ console.log(pointArray);
 
 
 
-////////////////////////////
-//Adding hands in the scene
-///////////////////////////
+  ////////////////////////////
+  //Adding hands in the scene
+  ///////////////////////////
 
   for (var i = 0; i < 2; i++) {
     var hand;
 
-     hand = new THREE.Mesh(new THREE.RingGeometry(140, 160, 40, 90, 100, Math.PI * 2), handMaterial);
+    hand = new THREE.Mesh(new THREE.RingGeometry(140, 160, 40, 90, 100, Math.PI * 2), handMaterial);
 
-// idee deco main : deux double anneaux en plus, pour simuler le poignet
+    // idee deco main : deux double anneaux en plus, pour simuler le poignet
 
     hand.fingers = [];
 
@@ -558,8 +538,9 @@ console.log(pointArray);
 
       for (var j = 0; j < 5; j++) {
 
-        if (i == 0) var finger = new THREE.Mesh(geometry, fingerMaterial);
-        if (i == 1) var finger = new THREE.Mesh(geometry, handMaterial);
+        if (i == 0) var finger = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matOrange);
+        //peut changer de mat entre les deux mains
+        if (i == 1) var finger = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matOrange);
         finger.position.x = SCENE_SIZE * 1000;
         scene.add(finger);
         hand.fingers.push(finger);
@@ -571,7 +552,7 @@ console.log(pointArray);
 
 
 
-/*
+  /*
 
 
 
@@ -586,7 +567,9 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 */
 
-  Leap.loop({enableGestures: true}, function(frame) {
+  Leap.loop({
+    enableGestures: true
+  }, function(frame) {
 
     /////////////////
     // MAIN 
@@ -594,29 +577,29 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
     for (var i = 0; i < 2; i++) {
       if (frame.hands[i]) {
-         hands[i].position = leapToScene(frame.hands[i].palmPosition);
+        hands[i].position = leapToScene(frame.hands[i].palmPosition);
 
-hands[i].rotation.x = (90 * Math.PI / 180) - frame.hands[i].palmNormal[2];
-hands[i].rotation.y =  frame.hands[i].palmNormal[0];
-hands[i].rotation.z = frame.hands[i].palmNormal[1];//useless
+        hands[i].rotation.x = (90 * Math.PI / 180) - frame.hands[i].palmNormal[2];
+        hands[i].rotation.y = frame.hands[i].palmNormal[0];
+        hands[i].rotation.z = frame.hands[i].palmNormal[1]; //useless
 
-leftHandId = frame.hands[0].id;
- if (frame.hands[1]) rightHandId = frame.hands[1].id;
+        leftHandId = frame.hands[0].id;
+        if (frame.hands[1]) rightHandId = frame.hands[1].id;
 
         //////////////////////inverser ////////////////////////////////
         if (hands.length == 2) {
           if (hands[0].position.x < hands[1].position.x) {
-        //    console.log('gauche');
+            //    console.log('gauche');
 
             hands[0].material.color.setHex(0xff0000);
 
           } else if (hands[1].position.x < hands[0].position.x) {
-          //  console.log(hands);
-           // hands.reverse();
-                  //      console.log('droite');
+            //  console.log(hands);
+            // hands.reverse();
+            //      console.log('droite');
             return;
 
-/*
+            /*
             hands[0].material.color.setHex(0xffff00);
             console.log('droite');
 */
@@ -631,10 +614,12 @@ leftHandId = frame.hands[0].id;
           if (frame.hands[i].fingers[j]) {
 
             hands[i].fingers[j].position = leapToScene(frame.hands[i].fingers[j].tipPosition);
-            
-            if(frame.hands[1]) {
-                 activeFinger = frame.hands[1].fingers[0];
 
+            if (frame.hands[1].fingers[0]) {
+              activeFinger = leapToScene(frame.hands[1].fingers[0].tipPosition);
+
+            } else {
+                activeFinger = new THREE.Vector3( 0, 0, 0 );
             }
 
           } else {
@@ -704,21 +689,21 @@ leftHandId = frame.hands[0].id;
           }
         }
       } // fin gesture circle
-      
+
 
       if (gestures[0].type == 'keyTap') {
-              if(leftHandId == gestures[0].handIds) {
-                console.log('tapmaingauche');
-              }
+        if (leftHandId == gestures[0].handIds) {
+          console.log('tapmaingauche');
+          createPoint();
+        }
       }
 
 
-    }// fin gesture detection
+    } // fin gesture detection
 
 
 
-  });// fin leap loop
-
+  }); // fin leap loop
 
 
 
@@ -746,19 +731,14 @@ leftHandId = frame.hands[0].id;
 
 
 
-
 } // fin init()
 
 
 
-
-document.onmousedown=function(){
-              console.log(leapToScene(activeFinger.tipPosition));
+document.onmousedown = function() {
+  console.log(leapToScene(activeFinger.tipPosition));
 
 };
-
-
-
 
 
 
@@ -766,7 +746,11 @@ function animate() {
 
 
 
-  activeTriangle.geometry.vertices[2] = new THREE.Vector3(tempX, tempY, 0);
+if(activeFinger.x){
+
+    activeTriangle.geometry.vertices[2] = activeFinger;
+
+
 
 
   // updating vertice
@@ -781,19 +765,17 @@ function animate() {
 
 
 
+  activeLine.geometry.verticesNeedUpdate = true;
 
+  if (countPoints % 3 == 0) {
+    activeLine.geometry.vertices[1] = activeFinger;
+  }
 
-    activeLine.geometry.verticesNeedUpdate = true;
-
-if(countPoints%3 == 0) {
-    activeLine.geometry.vertices[1] = new THREE.Vector3(tempX, tempY, 0);
 }
-
-
   requestAnimationFrame(animate);
   controls.update();
   // 
-//  changeControlsIndex;
+  //  changeControlsIndex;
   render();
 }
 
@@ -806,19 +788,18 @@ function render() {
 
 
 
-
-document.onmousedown=function(){
-//  console.log(activeTriangle);
+document.onmousedown = function() {
+   console.log(activeFinger);
 };
 
 
 
 function leapToScene(leapPosition) {
-  var x = (leapPosition[0] / 300) * SCENE_SIZE
-  var y = (((leapPosition[1]) - 200) / 300) * SCENE_SIZE
-  var z = (leapPosition[2] / 300) * SCENE_SIZE
-  var toReturn = new THREE.Vector3(x, y, z)
-  return toReturn
+  var x = (leapPosition[0] / 300) * SCENE_SIZE;
+  var y = (((leapPosition[1]) - 200) / 300) * SCENE_SIZE;
+  var z = (leapPosition[2] / 300) * SCENE_SIZE;
+  var toReturn = new THREE.Vector3(x, y, z);
+  return toReturn;
 }
 
 
@@ -911,9 +892,6 @@ function addLights() {
 
 
 
-
-
-
 document.onmousemove = getMouseXY;
 
 // Temporary variables to hold mouse x-y pos.s
@@ -922,20 +900,19 @@ var tempY = 0
 
 // Main function to retrieve mouse x-y pos.s
 
-function getMouseXY(e) {
+  function getMouseXY(e) {
 
     tempX = e.pageX
     tempY = e.pageY
-  // catch possible negative values in NS4
-  if (tempX < 0){tempX = 0}
-  if (tempY < 0){tempY = 0}  
-  // show the position values in the form named Show
-  // in the text fields named MouseX and MouseY
+    // catch possible negative values in NS4
+    if (tempX < 0) {
+      tempX = 0
+    }
+    if (tempY < 0) {
+      tempY = 0
+    }
+    // show the position values in the form named Show
+    // in the text fields named MouseX and MouseY
 
-  return true
-}
-
-
-
-
-
+    return true
+  }
