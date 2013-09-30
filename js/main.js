@@ -329,6 +329,8 @@ Working on : point proximity
           pointA = pointArray[smallId]; // change the value to the nearest
         // il doit y avoir un probleme la 
           pointArray[pointArray.length-1] = pointA; // change the last id in the array
+          sphereArray.push(' ');
+
           sphereArray[smallId].material = matRed;
         } else {
           console.log('new point');
@@ -336,8 +338,6 @@ Working on : point proximity
         }
         activeLine.geometry.vertices[0] = pointA;
 
-
-        // ******  faire pareil pour le mesh mais avec une ligne
         break;
 
       case 1:
@@ -348,7 +348,8 @@ Working on : point proximity
         if(smallId !== false) {
           pointB = pointArray[smallId];
           pointArray[pointArray.length-1] = pointB;
-          sphereArray[smallId].material = matRed;
+          sphereArray.push(' ');
+           sphereArray[smallId].material = matRed;
 
         } else {
           console.log('new point');
@@ -364,11 +365,13 @@ Working on : point proximity
         pointC = new THREE.Vector3(tempX, tempY, 0);
         pointArray.push(pointC);
 
-        smallId = proximity(pointC, proxVal)
+        smallId = proximity(pointC, proxVal);
         if(smallId !== false) {
           pointC = pointArray[smallId];
           pointArray[pointArray.length-1] = pointC;
-          sphereArray[smallId].material = matRed;
+          sphereArray.push(' ');
+
+           sphereArray[smallId].material = matRed;
 
         } else {
           console.log('new point');
@@ -388,6 +391,12 @@ Working on : point proximity
 
 
 
+
+
+
+  }
+
+
     //function to determine the nearest value
     function proximity(vect, val) { 
 
@@ -405,12 +414,6 @@ Working on : point proximity
       }
       return smallId; //return the id else, return false
     }
-
-
-
-
-
-  }
 
 
 
@@ -448,13 +451,11 @@ Working on : point proximity
       activeTriangle.geometry.vertices[2] = new THREE.Vector3(0, 0, 0);
 
     var geom = new THREE.Geometry();
-    var v1 = pointA;
-    var v2 = pointB;
-    var v3 = pointC;
 
-    geom.vertices.push(v1);
-    geom.vertices.push(v2);
-    geom.vertices.push(v3);
+
+    geom.vertices.push(pointA);
+    geom.vertices.push(pointB);
+    geom.vertices.push(pointC);
 
     geom.faces.push(new THREE.Face3(0, 1, 2));
     geom.computeFaceNormals();
@@ -466,20 +467,39 @@ Working on : point proximity
     scene.add(object);
 
 
+console.log(sphereArray);
+console.log(pointArray);
 
-      for(var i = sphereArray.length; i > sphereArray.length-3; i-- ) {
-            sphereArray[i-1].material = matWhite;
-      }
+
+
+    //not optimized at all...
+    if(proximity(pointA, proxVal) !== false) {
+      sphereArray[proximity(pointA, proxVal)].material = matWhite;
+    } else {
+      sphereArray[sphereArray.length-3].material = matWhite;
+    }
+       if(proximity(pointB, proxVal) !== false) {
+      sphereArray[proximity(pointB, proxVal)].material = matWhite;
+    } else {
+      sphereArray[sphereArray.length-2].material = matWhite;
+    }
+       if(proximity(pointC, proxVal) !== false) {
+      sphereArray[proximity(pointC, proxVal)].material = matWhite;
+    } else {
+      sphereArray[sphereArray.length-1].material = matWhite;
+    }
+   
+
 
   }
 
   function createSphere(point) {
 
-
     var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matRed);;
     sphermesh.position = point;
     scene.add(sphermesh);
-    sphereArray.push(sphermesh);
+
+   sphereArray.push(sphermesh);
 
   }
 
