@@ -84,14 +84,14 @@ function init() {
   cameraControls.zoomEnabled = true;
   cameraControls.zoomSpeed = 6;
   cameraControls.zoomHands = 1;
-  cameraControls.zoomFingers = [4, 5];
+  cameraControls.zoomFingers = [5, 5];
   cameraControls.zoomMin = 50;
   cameraControls.zoomMax = 2000;
 
-  cameraControls.panEnabled = true;
+  cameraControls.panEnabled = false;
   cameraControls.panSpeed = 2;
   cameraControls.panHands = 2;
-  cameraControls.panFingers = [6, 10];
+  cameraControls.panFingers = [10, 12];
   cameraControls.panRightHanded = false; // for left-handed person
 
 
@@ -272,7 +272,7 @@ scene.add(line);
 
   var pointA, pointB, pointC;
 
-  var proxVal = 100;
+  var proxVal = 200;
 
   var sphereArray = new Array();
   /*
@@ -615,7 +615,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
             hands[i].fingers[j].position = leapToScene(frame.hands[i].fingers[j].tipPosition);
 
-            if (frame.hands[1].fingers[0]) {
+            if (frame.hands[1] && frame.hands[1].fingers[0]) {
               activeFinger = leapToScene(frame.hands[1].fingers[0].tipPosition);
 
             } else {
@@ -692,7 +692,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
       if (gestures[0].type == 'keyTap') {
-        if (leftHandId == gestures[0].handIds) {
+        if (leftHandId == gestures[0].handIds && activeFinger.x !== 0) {
           console.log('tapmaingauche');
           createPoint();
         }
