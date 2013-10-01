@@ -52,6 +52,7 @@ init();
 animate();
 
 
+
 //ajout de nouveaux points
 var activeTriangle;
 var activeLine;
@@ -179,6 +180,10 @@ scene.add(line);
 
 
 
+
+
+/* // ARROWS
+
   var origin = new THREE.Vector3(0, 0, 0);
 
   coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), origin, 175, 0x888888);
@@ -188,68 +193,13 @@ scene.add(line);
   scene.add(coords2);
   scene.add(coords3);
 
-
+*/
 
   ///////////////////////////////////////////////////////////////////////////////////////
   //        SCENE
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(150, 32, 32), matRed);;
-  var sphermesh2 = new THREE.Mesh(new THREE.SphereGeometry(150, 32, 32), matBlue);;
-  sphermesh2.position.x = 450;
-  sphermesh.position.x = -tempX;
 
-  scene.add(sphermesh);
-  // scene.add(sphermesh2);
-
-
-
-  /*
-  var geom = new THREE.Geometry();
-  var v1 = new THREE.Vector3(0, 0, 0);
-  var v2 = new THREE.Vector3(0, 500, 0);
-  var v3 = new THREE.Vector3(0, 500, 500);
-
-  geom.vertices.push(v1);
-  geom.vertices.push(v2);
-  geom.vertices.push(v3);
-
-  geom.faces.push(new THREE.Face3(0, 1, 2));
-  geom.computeFaceNormals();
-
-  var object = new THREE.Mesh(geom, matBlue);
-
-  object.position.z = -100; //move a bit back - size of 500 is a bit big
-  object.rotation.y = -Math.PI * .5; //triangle is pointing in depth, rotate it -90 degrees on Y
-
-  scene.add(object);
-
-
-
-
-
-
-  var geom2 = new THREE.Geometry();
-  var v1 = new THREE.Vector3(0, 500, 0);
-  var v2 = new THREE.Vector3(0, 500, 500);
-  var v3 = new THREE.Vector3(-300, 700, 600);
-
-  geom2.vertices.push(v1);
-  geom2.vertices.push(v2);
-  geom2.vertices.push(v3);
-
-  geom2.faces.push(new THREE.Face3(0, 1, 2));
-  geom2.computeFaceNormals();
-
-  var object2 = new THREE.Mesh(geom2, matBlue);
-
-  object2.position.z = -100; //move a bit back - size of 500 is a bit big
-  object2.rotation.y = -Math.PI * .5; //triangle is pointing in depth, rotate it -90 degrees on Y
-
-  scene.add(object2);
-
-
-*/
 
   ///////////////////////////////////////////////////////////////////////////////////////
   //        SCENE UTILS
@@ -267,7 +217,7 @@ scene.add(line);
   //        TRIANGLE CREATION  ** I can also create complex shape
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  //
+
   //
   //To do : Add a point on a tap or a double tap ?
   //
@@ -281,16 +231,11 @@ scene.add(line);
   var proxVal = 200;
 
   var sphereArray = new Array();
-  /*
-
-Working on : point proximity
 
 
 
- */
 
-
-
+  ////// Geometry for triangles an line
   var geom = new THREE.Geometry();
 
   geom.vertices.push(new THREE.Vector3(0, 0, 0));
@@ -302,6 +247,7 @@ Working on : point proximity
   activeTriangle = new THREE.Mesh(geom, matBlue);
 
   scene.add(activeTriangle);
+
 
 
 
@@ -318,9 +264,10 @@ Working on : point proximity
 
 
 
+
+
+
   function createPoint() {
-
-
 
     var smallId; // change at each new point.
 
@@ -389,7 +336,6 @@ Working on : point proximity
         break;
 
     } // fin switch
-
 
 
   }
@@ -570,7 +516,6 @@ var vect = new THREE.Vector3( 5, -9, 2 );
 console.log("2 " + hands[0].rotation.constructor.toString());
   //Adding "stabilized" result a less reactive interaction
 
-
 */
 
   Leap.loop({
@@ -592,6 +537,8 @@ console.log("2 " + hands[0].rotation.constructor.toString());
         leftHandId = frame.hands[0].id;
         if (frame.hands[1]) rightHandId = frame.hands[1].id;
 
+
+
         //////////////////////inverser ////////////////////////////////
         if (hands.length == 2) {
           if (hands[0].position.x < hands[1].position.x) {
@@ -612,7 +559,6 @@ console.log("2 " + hands[0].rotation.constructor.toString());
           }
 
         }
-
 
 
         for (var j = 0; j < 5; j++) {
@@ -724,8 +670,9 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
   // pour avoir la transparence du !!
-  renderer.setClearColorHex( 0xe5dfd3, 1 );
+  renderer.setClearColor( 0xe5dfd3, 1 );
   renderer.autoClear = false;
+
 
   container = document.getElementById('container');
   container.appendChild(renderer.domElement);
@@ -734,9 +681,8 @@ console.log("2 " + hands[0].rotation.constructor.toString());
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.top = '0px';
   stats.domElement.style.zIndex = 100;
-  //container.appendChild(stats.domElement);
+  container.appendChild(stats.domElement);
 
-  //
 
   window.addEventListener('resize', onWindowResize, false);
 
@@ -762,8 +708,6 @@ if(activeFinger.x){
     activeTriangle.geometry.vertices[2] = activeFinger;
 
 
-
-
   // updating vertice
   activeTriangle.geometry.verticesNeedUpdate = true;
   activeTriangle.geometry.elementsNeedUpdate = true;
@@ -783,10 +727,13 @@ if(activeFinger.x){
   }
 
 }
+
+
   requestAnimationFrame(animate);
   controls.update();
   //  changeControlsIndex;
   render();
+
 }
 
 
@@ -803,7 +750,7 @@ function render() {
 
 */
 
-var sizeCamera = 200;
+  var sizeCamera = 200;
 
   renderer.clear();
 
@@ -812,7 +759,7 @@ var sizeCamera = 200;
   renderer.setViewport(0, 0, window.innerWidth , window.innerHeight);
   renderer.setScissor(0, 0, window.innerWidth , window.innerHeight);
   renderer.enableScissorTest(true);
-//  renderer.setClearColor(0xeeeeee);
+// renderer.setClearColor(0xeeeeee);
 
   renderer.render(scene, camera);
 
@@ -826,8 +773,6 @@ var sizeCamera = 200;
   //renderer.setClearColor(0xdd8888);
 
   renderer.render(scene, cameraRight);
-
-
 
 
 
@@ -885,7 +830,6 @@ function changeControlsIndex() {
 
 
 function addGrid(size, step, color, opacity) {
-
   //     var size = 1000, step = 100;
 
   var geometry = new THREE.Geometry();
@@ -941,29 +885,3 @@ function addLights() {
 
 }
 
-
-
-document.onmousemove = getMouseXY;
-
-// Temporary variables to hold mouse x-y pos.s
-var tempX = 0
-var tempY = 0
-
-// Main function to retrieve mouse x-y pos.s
-
-  function getMouseXY(e) {
-
-    tempX = e.pageX
-    tempY = e.pageY
-    // catch possible negative values in NS4
-    if (tempX < 0) {
-      tempX = 0
-    }
-    if (tempY < 0) {
-      tempY = 0
-    }
-    // show the position values in the form named Show
-    // in the text fields named MouseX and MouseY
-
-    return true
-  }
