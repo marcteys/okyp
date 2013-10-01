@@ -26,7 +26,7 @@ exemple ;isc control transform
 
 
 */
-
+var cube;
 
 
 if (!Detector.webgl) Detector.addGetWebGLMessage();
@@ -178,6 +178,18 @@ scene.add(line);
     opacity: 0.8
   });
 
+  var matGreen = new THREE.MeshPhongMaterial({
+    color: 0x00cc00,
+    transparent: true,
+    opacity: 0.8
+  });
+
+  var matYellow = new THREE.MeshPhongMaterial({
+    color: 0xFEE43B,
+    transparent: true,
+    opacity: 0.8
+  });
+
 
 
 
@@ -211,6 +223,10 @@ scene.add(line);
 
   addLights();
 
+
+
+cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNormalMaterial());
+      scene.add(cube);
 
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -257,7 +273,7 @@ scene.add(line);
   geomLine.vertices.push(new THREE.Vector3(0, 0, 0));
 
   activeLine = new THREE.Line(geomLine, new THREE.LineBasicMaterial({
-    color: 0x000000
+    color: 0x025D8C
   }));
 
   scene.add(activeLine);
@@ -490,9 +506,9 @@ scene.add(line);
 
       for (var j = 0; j < 5; j++) {
 
-        if (i == 0) var finger = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matOrange);
+        if (i == 0) var finger = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matGreen);
         //peut changer de mat entre les deux mains
-        if (i == 1) var finger = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matOrange);
+        if (i == 1) var finger = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matWhite);
         finger.position.x = SCENE_SIZE * 1000;
         scene.add(finger);
         hand.fingers.push(finger);
@@ -522,6 +538,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
     enableGestures: true
   }, function(frame) {
 
+
     /////////////////
     // MAIN 
     /////////////////
@@ -535,12 +552,13 @@ console.log("2 " + hands[0].rotation.constructor.toString());
         hands[i].rotation.z = frame.hands[i].palmNormal[1]; //useless
 
         leftHandId = frame.hands[0].id;
+
         if (frame.hands[1]) rightHandId = frame.hands[1].id;
 
 
 
         //////////////////////inverser ////////////////////////////////
-        if (hands.length == 2) {
+        /*if (hands.length == 2) {
           if (hands[0].position.x < hands[1].position.x) {
             //    console.log('gauche');
 
@@ -552,23 +570,39 @@ console.log("2 " + hands[0].rotation.constructor.toString());
             //      console.log('droite');
             return;
 
-            /*
-            hands[0].material.color.setHex(0xffff00);
-            console.log('droite');
-*/
+       
+            //hands[0].material.color.setHex(0xffff00);
+          //  console.log('droite');
+
           }
 
         }
 
-
+*/
         for (var j = 0; j < 5; j++) {
 
           if (frame.hands[i].fingers[j]) {
 
             hands[i].fingers[j].position = leapToScene(frame.hands[i].fingers[j].tipPosition);
 
+            //Change materials -> fingers
+            if(frame.hands[0].fingers[4]) {
+              hands[0].fingers[j].material = matYellow;
+            } else if(frame.hands[0].fingers[3]){
+              hands[0].fingers[j].material = matWhite;
+            }else  if(frame.hands[0].fingers[2]){
+              hands[0].fingers[j].material = matGreen;
+            } else if(frame.hands[0].fingers[1]){
+               hands[0].fingers[j].material = matWhite;
+            }else if(frame.hands[0].fingers[0]){
+               hands[0].fingers[j].material = matOrange;
+            }
+
             if (frame.hands[1] && frame.hands[1].fingers[0]) {
+
               activeFinger = leapToScene(frame.hands[1].fingers[0].tipPosition);
+
+              console.log(hands[1].fingers[0].material = matRed);
 
             } else {
                 activeFinger = new THREE.Vector3( 0, 0, 0 );
@@ -585,6 +619,9 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
     }
+
+hands[1].matrix.makeRotationFromEuler(camera.rotation);
+
 
     /////////////////
     // CAMERA CONTROL
@@ -682,7 +719,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.top = '0px';
   stats.domElement.style.zIndex = 100;
-  container.appendChild(stats.domElement);
+ // container.appendChild(stats.domElement);
 
 
   window.addEventListener('resize', onWindowResize, false);
@@ -694,13 +731,20 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
 document.onmousedown = function() {
-  console.log(  controls.update(););
+  console.log( camera.rotation);
 
 };
 
 
 
 function animate() {
+
+
+
+
+cube.rotation.x =  camera.rotation.x;
+cube.rotation.y =  camera.rotation.y;
+cube.rotation.z =  camera.rotation.z;
 
 
 
@@ -782,10 +826,6 @@ function render() {
 }
 
 
-
-document.onmousedown = function() {
-   console.log(camera);
-};
 
 
 
