@@ -64,6 +64,7 @@ function init() {
   ///////////////////////////////////////////////////////////////////////////////////////
 
 cameraRight= new THREE.OrthographicCamera( 0.5 * window.innerWidth / - 2, 0.5 * window.innerWidth / 2,  window.innerHeight / 2,  window.innerHeight / - 2, 1, 10000 );
+  cameraRight = new THREE.PerspectiveCamera(45, 1, 1, 10000);
 
 cameraRight.position.y = 000;
 cameraRight.position.x = 1600;
@@ -779,15 +780,13 @@ if(activeFinger.x){
 }
   requestAnimationFrame(animate);
   controls.update();
-  // 
   //  changeControlsIndex;
   render();
 }
-
 function render() {
 
 
-/*
+  /*
           renderer.setViewport( 0, 0, window.innerWidth/2, window.innerHeight);
           renderer.setScissor( 0, 0, window.innerWidth/2, window.innerHeight);
           renderer.enableScissorTest ( true );
@@ -795,28 +794,31 @@ function render() {
 
 */
 
+var sizeCamera = 250;
 
-          cameraRight.updateProjectionMatrix();
+  renderer.clear();
 
-        renderer.clear();
+  camera.updateProjectionMatrix();
 
+  renderer.setViewport(0, 0, window.innerWidth , window.innerHeight);
+  renderer.setScissor(0, 0, window.innerWidth , window.innerHeight);
+  renderer.enableScissorTest(true);
+//  renderer.setClearColor(0xeeeeee);
 
-  renderer.setViewport( window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight);
- renderer.setViewport( window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight);
-  renderer.setScissor( window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight );
-renderer.enableScissorTest ( true );
-          camera.updateProjectionMatrix();
-renderer.setClearColor( 0xdd8888);
-
-renderer.render(scene, cameraRight);
-
-  renderer.setViewport( 0, 0, window.innerWidth/2, window.innerHeight );
-   renderer.setViewport(0, 0, window.innerWidth/2, window.innerHeight );
-  renderer.setScissor( 0, 0, window.innerWidth/2, window.innerHeight );
-renderer.enableScissorTest ( true );
-          camera.updateProjectionMatrix();
-renderer.setClearColor( 0xeeeeee);
   renderer.render(scene, camera);
+
+
+
+  cameraRight.updateProjectionMatrix();
+
+  renderer.setViewport(window.innerWidth-sizeCamera,window.innerHeight-sizeCamera, sizeCamera, sizeCamera);
+  renderer.setScissor(window.innerWidth -sizeCamera, window.innerHeight-sizeCamera, window.innerHeight,sizeCamera);
+ // renderer.enableScissorTest(true);
+  //renderer.setClearColor(0xdd8888);
+
+  renderer.render(scene, cameraRight);
+
+
 
 
 
@@ -843,16 +845,18 @@ function leapToScene(leapPosition) {
 
 
 function onWindowResize() {
-/*
+
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
+  cameraRight.aspect = window.innerWidth / window.innerHeight;
+  cameraRight.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   controls.handleResize();
 
   render();
-*/
+
 }
 
 
