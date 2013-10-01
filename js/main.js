@@ -84,14 +84,14 @@ cameraRight.lookAt(new THREE.Vector3(0,0,0));
   cameraControls = new THREE.LeapCameraControls(camera);
 
   cameraControls.rotateEnabled = true;
-  cameraControls.rotateSpeed = 3;
+  cameraControls.rotateSpeed = 2;
   cameraControls.rotateHands = 1;
   cameraControls.rotateFingers = [3, 3];
 
   cameraControls.zoomEnabled = true;
-  cameraControls.zoomSpeed = 6;
+  cameraControls.zoomSpeed = 4;
   cameraControls.zoomHands = 1;
-  cameraControls.zoomFingers = [5, 5];
+  cameraControls.zoomFingers = [4, 6];
   cameraControls.zoomMin = 50;
   cameraControls.zoomMax = 2000;
 
@@ -182,7 +182,7 @@ scene.add(line);
 
 
 
-/* // ARROWS
+// ARROWS
 
   var origin = new THREE.Vector3(0, 0, 0);
 
@@ -193,7 +193,7 @@ scene.add(line);
   scene.add(coords2);
   scene.add(coords3);
 
-*/
+
 
   ///////////////////////////////////////////////////////////////////////////////////////
   //        SCENE
@@ -228,7 +228,7 @@ scene.add(line);
 
   var pointA, pointB, pointC;
 
-  var proxVal = 200;
+  var proxVal = 180;
 
   var sphereArray = new Array();
 
@@ -670,8 +670,9 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
   // pour avoir la transparence du !!
-  renderer.setClearColor( 0xe5dfd3, 1 );
+  renderer.setClearColor( 0xe5dfd3 );
   renderer.autoClear = false;
+  renderer.autoClearColor = 0xe5dfd3 ;
 
 
   container = document.getElementById('container');
@@ -693,7 +694,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
 document.onmousedown = function() {
-  console.log(leapToScene(activeFinger.tipPosition));
+  console.log(  controls.update(););
 
 };
 
@@ -783,7 +784,7 @@ function render() {
 
 
 document.onmousedown = function() {
-   console.log(activeFinger);
+   console.log(camera);
 };
 
 
