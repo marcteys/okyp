@@ -34,6 +34,7 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 var container, stats;
 
 var camera, controls, scene, renderer;
+var cameraRight;
 
 var cameraControls;
 var lastControlsIndex = -1,
@@ -51,7 +52,6 @@ init();
 animate();
 
 
-
 //ajout de nouveaux points
 var activeTriangle;
 var activeLine;
@@ -63,7 +63,12 @@ function init() {
   //        BASE SETTINGS
   ///////////////////////////////////////////////////////////////////////////////////////
 
+cameraRight= new THREE.OrthographicCamera( 0.5 * window.innerWidth / - 2, 0.5 * window.innerWidth / 2,  window.innerHeight / 2,  window.innerHeight / - 2, 1, 10000 );
 
+cameraRight.position.y = 000;
+cameraRight.position.x = 1600;
+cameraRight.position.z = 00;
+cameraRight.lookAt(new THREE.Vector3(0,0,0));
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
   camera.position.z = SCENE_SIZE * 2;
   camera.position.y = 1000;
@@ -781,7 +786,40 @@ if(activeFinger.x){
 
 function render() {
 
+
+/*
+          renderer.setViewport( 0, 0, window.innerWidth/2, window.innerHeight);
+          renderer.setScissor( 0, 0, window.innerWidth/2, window.innerHeight);
+          renderer.enableScissorTest ( true );
+          renderer.setClearColor( view.background );
+
+*/
+
+
+          cameraRight.updateProjectionMatrix();
+
+        renderer.clear();
+
+
+  renderer.setViewport( window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight);
+ renderer.setViewport( window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight);
+  renderer.setScissor( window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight );
+renderer.enableScissorTest ( true );
+          camera.updateProjectionMatrix();
+renderer.setClearColor( 0xdd8888);
+
+renderer.render(scene, cameraRight);
+
+  renderer.setViewport( 0, 0, window.innerWidth/2, window.innerHeight );
+   renderer.setViewport(0, 0, window.innerWidth/2, window.innerHeight );
+  renderer.setScissor( 0, 0, window.innerWidth/2, window.innerHeight );
+renderer.enableScissorTest ( true );
+          camera.updateProjectionMatrix();
+renderer.setClearColor( 0xeeeeee);
   renderer.render(scene, camera);
+
+
+
   stats.update();
 
 }
@@ -805,7 +843,7 @@ function leapToScene(leapPosition) {
 
 
 function onWindowResize() {
-
+/*
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
@@ -814,7 +852,7 @@ function onWindowResize() {
   controls.handleResize();
 
   render();
-
+*/
 }
 
 
