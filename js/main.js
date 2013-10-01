@@ -718,9 +718,14 @@ console.log("2 " + hands[0].rotation.constructor.toString());
   ///////////////////////////////////////////////////////////////////////////////////////
 
   renderer = new THREE.WebGLRenderer({
-    antialias: false
+    antialias: true
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
+
+
+  // pour avoir la transparence du !!
+  renderer.setClearColorHex( 0xe5dfd3, 1 );
+  renderer.autoClear = false;
 
   container = document.getElementById('container');
   container.appendChild(renderer.domElement);
@@ -729,7 +734,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
   stats.domElement.style.position = 'absolute';
   stats.domElement.style.top = '0px';
   stats.domElement.style.zIndex = 100;
-  container.appendChild(stats.domElement);
+  //container.appendChild(stats.domElement);
 
   //
 
@@ -783,6 +788,10 @@ if(activeFinger.x){
   //  changeControlsIndex;
   render();
 }
+
+
+
+
 function render() {
 
 
@@ -794,7 +803,7 @@ function render() {
 
 */
 
-var sizeCamera = 250;
+var sizeCamera = 200;
 
   renderer.clear();
 
@@ -813,7 +822,7 @@ var sizeCamera = 250;
 
   renderer.setViewport(window.innerWidth-sizeCamera,window.innerHeight-sizeCamera, sizeCamera, sizeCamera);
   renderer.setScissor(window.innerWidth -sizeCamera, window.innerHeight-sizeCamera, window.innerHeight,sizeCamera);
- // renderer.enableScissorTest(true);
+  renderer.enableScissorTest(true);
   //renderer.setClearColor(0xdd8888);
 
   renderer.render(scene, cameraRight);
@@ -822,7 +831,7 @@ var sizeCamera = 250;
 
 
 
-  stats.update();
+ // stats.update();
 
 }
 
