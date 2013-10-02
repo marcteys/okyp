@@ -50,7 +50,7 @@ var leftHandId, rightHandId;
 init();
 animate();
 
-
+var triangleMode = true;
 
 //ajout de nouveaux points
 var activeTriangle;
@@ -69,7 +69,7 @@ cameraRight= new THREE.OrthographicCamera( 0.5 * window.innerWidth / - 2, 0.5 * 
   cameraRight = new THREE.PerspectiveCamera(45, 1, 1, 10000);
 
 cameraRight.position.y = 0;
-cameraRight.position.x = 1600;
+cameraRight.position.x = 2000;
 cameraRight.position.z = 0;
 cameraRight.lookAt(new THREE.Vector3(0,0,0));
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
@@ -159,7 +159,7 @@ scene.add(line);
   });
 
   var matOrange = new THREE.MeshPhongMaterial({
-    color: 0xCC3300
+    color: 0x038fd7
    // side: THREE.DoubleSide,
   //  transparent: true,
   //  opacity: 0.8
@@ -253,8 +253,12 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
 
 
+
+
+
+
   ///////////////////////////////////////////////////////////////////////////////////////
-  //        TRIANGLE CREATION  ** I can also create complex shape
+  //        TRIANGLE CREATION  ** I can also create complex shape 
   ///////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -297,7 +301,7 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
   geomLine.vertices.push(new THREE.Vector3(0, 0, 0));
 
   activeLine = new THREE.Line(geomLine, new THREE.LineBasicMaterial({
-    color: 0x025D8C
+    color: 0x66cafd
   }));
 
   scene.add(activeLine);
@@ -404,29 +408,6 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
 
 
-  function updateLine(pointA, pointB) {
-
-
-    var lineGeometry = new THREE.Geometry(); // en faire une variable globale
-
-    lineGeometry.vertices.push(pointA);
-    lineGeometry.vertices.push(pointB);
-    lineGeometry.verticesNeedUpdate = true;
-
-    var lineMaterial = new THREE.LineBasicMaterial({
-      color: 0xFFFFFF,
-      transparent: true,
-      linewidth: 3
-    });
-
-    this.line = new THREE.Line(lineGeometry, lineMaterial);
-    this.line.geometry.verticesNeedUpdate = true;
-
-    scene.add(this.line);
-
-
-  }
-
 
   function createTriangle(pointA, pointB, pointC) {
 
@@ -486,10 +467,40 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
 
 
-  document.onkeypress = function(evt) {
-    var k = evt ? evt.which : window.event.keyCode;
-    if (k == 32) createPoint();
-  }
+
+
+
+
+
+
+  ///////////////////////////////////////////////////////////////////////////////////////
+  //        MESH CREATION
+  ///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+  var pointMeshArray = new Array(); // a utilise si je veux sauvegarder
+
+
+
+
+function createPointMesh() {
+
+
+
+}
+
+function proximityMesh() {
+
+
+}
+
+
+//function createMesh(/* faire passer un array */){}
+
+
 
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -626,7 +637,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
             }
 
             if (frame.hands[1] && frame.hands[1].fingers[0]) {
-
+              hands[0].fingers[j].material = matOrange;
               activeFinger = leapToScene(frame.hands[1].fingers[0].tipPosition);
 
               console.log(hands[1].fingers[0].material = matRed);
@@ -698,6 +709,7 @@ hands[1].matrix.makeRotationFromEuler(camera.rotation);
             // forward is into the screen, while backwards is out of it
             clockwise = Leap.vec3.dot(direction, normal) > 0;
             if (clockwise) {
+            //  triangleMode = !triangleMode;
               //Do clockwose stuff
             } else {
               //Do counterclockwise stuff
@@ -710,7 +722,8 @@ hands[1].matrix.makeRotationFromEuler(camera.rotation);
       if (gestures[0].type == 'keyTap') {
         if (leftHandId == gestures[0].handIds && activeFinger.x !== 0) {
           console.log('tapmaingauche');
-          createPoint();
+         if(triangleMode) createPoint();
+         else createPointMesh();
         }
       }
 
@@ -737,9 +750,9 @@ hands[1].matrix.makeRotationFromEuler(camera.rotation);
 
   // transparency cube /////////////////
 
- // renderer.setClearColor( maincolor);
-  //renderer.autoClear = false;
- // renderer.autoClearColor = maincolor;
+//renderer.setClearColor( maincolor);
+ //renderer.autoClear = false;
+ renderer.autoClearColor = maincolor;
 
 
   container = document.getElementById('container');
