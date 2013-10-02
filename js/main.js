@@ -198,9 +198,9 @@ scene.add(line);
 
   var origin = new THREE.Vector3(0, 0, 0);
 
-  coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), origin, 175, 0x888888);
-  coords2 = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), origin, 175, 0x888888);
-  coords3 = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), origin, 175, 0x888888);
+  coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), origin, 175, 0xDC0000);
+  coords2 = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), origin, 175, 0x1C1CDF);
+  coords3 = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), origin, 175, 0x00E800);
   scene.add(coords1);
   scene.add(coords2);
   scene.add(coords3);
@@ -226,7 +226,7 @@ scene.add(line);
 
 
 cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNormalMaterial());
-      scene.add(cube);
+ //     scene.add(cube);
 
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -740,13 +740,13 @@ document.onmousedown = function() {
 function animate() {
 
 
-
+/*
 
 cube.rotation.x =  camera.rotation.x;
 cube.rotation.y =  camera.rotation.y;
 cube.rotation.z =  camera.rotation.z;
 
-
+*/
 
 if(activeFinger.x){
 
