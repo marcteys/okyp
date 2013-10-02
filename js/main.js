@@ -27,7 +27,7 @@ exemple ;isc control transform
 
 */
 var cube;
-
+ var maincolor = new THREE.Color( 0x444444 );
 
 if (!Detector.webgl) Detector.addGetWebGLMessage();
 
@@ -154,7 +154,7 @@ scene.add(line);
     color: 0x025D8C,
     side: THREE.DoubleSide,
     transparent: true,
-    opacity: 0.8
+    opacity: 0.9
   });
 
   var matOrange = new THREE.MeshPhongMaterial({
@@ -190,6 +190,20 @@ scene.add(line);
     opacity: 0.8
   });
 
+  var matLightGrey = new THREE.MeshPhongMaterial({
+    color: 0xAAAAAA,
+    transparent: true,
+    opacity: 0.8
+  });
+
+
+  var matDarkGrey = new THREE.MeshPhongMaterial({
+    color: 0x222222,
+    transparent: true,
+    opacity: 0.9
+  });
+
+
 
 
 
@@ -213,12 +227,16 @@ scene.add(line);
 
 
 
+
+
+
+
   ///////////////////////////////////////////////////////////////////////////////////////
   //        SCENE UTILS
   ///////////////////////////////////////////////////////////////////////////////////////
 
 
-  addGrid(1000, 100, 0x000000, 0.2);
+  addGrid(1000, 100, 0x888888, 1);
 
 
   addLights();
@@ -227,6 +245,11 @@ scene.add(line);
 
 cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNormalMaterial());
  //     scene.add(cube);
+
+
+
+
+
 
 
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -450,7 +473,7 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
   function createSphere(point) {
 
-    var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matRed);;
+    var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(10, 8, 8), matRed);;
     sphermesh.position = point;
     scene.add(sphermesh);
 
@@ -707,9 +730,9 @@ hands[1].matrix.makeRotationFromEuler(camera.rotation);
 
 
   // pour avoir la transparence du !!
-  renderer.setClearColor( 0xe5dfd3 );
+  renderer.setClearColor( maincolor);
   renderer.autoClear = false;
-  renderer.autoClearColor = 0xe5dfd3 ;
+  renderer.autoClearColor = maincolor;
 
 
   container = document.getElementById('container');
