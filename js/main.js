@@ -27,9 +27,8 @@ exemple ;isc control transform
 
 */
 var cube;
- var maincolor = new THREE.Color( 0x444444 );
+var maincolor = new THREE.Color( 0x444444 );
 
-if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 var container, stats;
 
@@ -60,6 +59,8 @@ var countPoints = -1;
 
 function init() {
 
+if (!Detector.webgl) Detector.addGetWebGLMessage();
+
   ///////////////////////////////////////////////////////////////////////////////////////
   //        BASE SETTINGS
   ///////////////////////////////////////////////////////////////////////////////////////
@@ -67,9 +68,9 @@ function init() {
 cameraRight= new THREE.OrthographicCamera( 0.5 * window.innerWidth / - 2, 0.5 * window.innerWidth / 2,  window.innerHeight / 2,  window.innerHeight / - 2, 1, 10000 );
   cameraRight = new THREE.PerspectiveCamera(45, 1, 1, 10000);
 
-cameraRight.position.y = 000;
+cameraRight.position.y = 0;
 cameraRight.position.x = 1600;
-cameraRight.position.z = 00;
+cameraRight.position.z = 0;
 cameraRight.lookAt(new THREE.Vector3(0,0,0));
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
   camera.position.z = SCENE_SIZE * 2;
@@ -158,36 +159,36 @@ scene.add(line);
   });
 
   var matOrange = new THREE.MeshPhongMaterial({
-    color: 0xCC3300,
-    side: THREE.DoubleSide,
-    transparent: true,
-    opacity: 0.8
+    color: 0xCC3300
+   // side: THREE.DoubleSide,
+  //  transparent: true,
+  //  opacity: 0.8
   });
 
   var matRed = new THREE.MeshPhongMaterial({
-    color: 0xC6010A,
-    side: THREE.DoubleSide,
+   // color: 0xC6010A,
+    color: 0xFF010A,
     transparent: true,
     opacity: 0.8
   });
 
   var matWhite = new THREE.MeshPhongMaterial({
     color: 0xFFFFFF,
-    side: THREE.DoubleSide,
-    transparent: true,
+   // side: THREE.DoubleSide,
+   // transparent: true,
     opacity: 0.8
   });
 
   var matGreen = new THREE.MeshPhongMaterial({
     color: 0x00cc00,
-    transparent: true,
+ //   transparent: true,
     opacity: 0.8
   });
 
   var matYellow = new THREE.MeshPhongMaterial({
-    color: 0xFEE43B,
-    transparent: true,
-    opacity: 0.8
+    color: 0xFFD700
+  //  transparent: true,
+  //  opacity: 0.8
   });
 
   var matLightGrey = new THREE.MeshPhongMaterial({
@@ -374,6 +375,8 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
         createTriangle(pointA, pointB, pointC);
         break;
 
+        default:
+        break;
     } // fin switch
 
 
@@ -425,7 +428,7 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
   }
 
 
-  function createTriangle(pointA, pointC, pointC) {
+  function createTriangle(pointA, pointB, pointC) {
 
 
     activeTriangle.geometry.vertices[0] =
@@ -473,7 +476,7 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
   function createSphere(point) {
 
-    var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(10, 8, 8), matRed);;
+    var sphermesh = new THREE.Mesh(new THREE.SphereGeometry(10, 8, 8), matRed);
     sphermesh.position = point;
     scene.add(sphermesh);
 
@@ -532,6 +535,7 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
         if (i == 0) var finger = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matGreen);
         //peut changer de mat entre les deux mains
         if (i == 1) var finger = new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), matWhite);
+
         finger.position.x = SCENE_SIZE * 1000;
         scene.add(finger);
         hand.fingers.push(finger);
@@ -653,7 +657,7 @@ hands[1].matrix.makeRotationFromEuler(camera.rotation);
       cameraControls.update(frame);
     } else {
       objectsControls[index].update(frame);
-    };
+    }
 
     // custom modifications (here: show coordinate system always on target and light movement)
     coords1.position = cameraControls.target;
@@ -887,10 +891,10 @@ function changeControlsIndex() {
         index = controlsIndex;
         if (index > -1) objects[index].material.color.setHex(0xff0000);
       }
-    };
-  };
+    }
+  }
   lastControlsIndex = controlsIndex;
-};
+}
 
 
 function addGrid(size, step, color, opacity) {
@@ -942,8 +946,8 @@ function addLights() {
 
   //
 
-  dirLight = new THREE.DirectionalLight(0xffffff, .8);
-  dirLight.color.setHSL(.8, 1, 0.95);
+  dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  dirLight.color.setHSL(0.8, 1, 0.95);
   dirLight.position.set(-1, 1.75, 1);
   scene.add(dirLight);
 
