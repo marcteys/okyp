@@ -733,10 +733,13 @@ hands[1].matrix.makeRotationFromEuler(camera.rotation);
   renderer.setSize(window.innerWidth, window.innerHeight);
 
 
-  // pour avoir la transparence du !!
-  renderer.setClearColor( maincolor);
-  renderer.autoClear = false;
-  renderer.autoClearColor = maincolor;
+
+
+  // transparency cube /////////////////
+
+ // renderer.setClearColor( maincolor);
+  //renderer.autoClear = false;
+ // renderer.autoClearColor = maincolor;
 
 
   container = document.getElementById('container');
@@ -822,6 +825,8 @@ function render() {
 
 */
 
+//  renderer.autoClear = true;
+
   var sizeCamera = 200;
 
   renderer.clear();
@@ -831,7 +836,7 @@ function render() {
   renderer.setViewport(0, 0, window.innerWidth , window.innerHeight);
   renderer.setScissor(0, 0, window.innerWidth , window.innerHeight);
   renderer.enableScissorTest(true);
-// renderer.setClearColor(0xeeeeee);
+renderer.setClearColor(maincolor);
 
   renderer.render(scene, camera);
 
