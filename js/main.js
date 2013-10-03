@@ -50,7 +50,7 @@ var leftHandId, rightHandId;
 init();
 animate();
 
-var triangleMode = false;
+var triangleMode = true;
 
 //ajout de nouveaux points
 var activeTriangle;
@@ -61,24 +61,41 @@ function init() {
 
 if (!Detector.webgl) Detector.addGetWebGLMessage();
 
+
   ///////////////////////////////////////////////////////////////////////////////////////
   //        BASE SETTINGS
   ///////////////////////////////////////////////////////////////////////////////////////
 
-cameraRight= new THREE.OrthographicCamera( 0.5 * window.innerWidth / - 2, 0.5 * window.innerWidth / 2,  window.innerHeight / 2,  window.innerHeight / - 2, 1, 10000 );
-  cameraRight = new THREE.PerspectiveCamera(45, 1, 1, 10000);
 
-cameraRight.position.y = 0;
-cameraRight.position.x = 2000;
-cameraRight.position.z = 0;
-cameraRight.lookAt(new THREE.Vector3(0,0,0));
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-  camera.position.z = SCENE_SIZE * 2;
-  camera.position.y = 1000;
+    camera.position.z = SCENE_SIZE * 2;
+    camera.position.y = 1000;
 
   scene = new THREE.Scene();
 
   camera.lookAt(scene.position);
+
+
+
+  cameraRight = new THREE.PerspectiveCamera(45, 1, 1, 10000);
+
+    cameraRight.position.x = 2000;
+    cameraRight.position.y = 0;
+    cameraRight.position.z = 0;
+    cameraRight.lookAt(new THREE.Vector3(0,0,0));
+
+  cameraTop = new THREE.PerspectiveCamera(45, 1, 1, 10000);
+
+    cameraTop.position.x = 0;
+    cameraTop.position.y = 2000;
+    cameraTop.position.z = 0;
+        cameraTop.rotation.z= THREE.Math.PI;
+        cameraTop.rotation.x= THREE.Math.PI;
+        cameraTop.rotation.y= THREE.Math.PI;
+
+    cameraTop.lookAt(new THREE.Vector3(0,0,-1));
+
+
 
 
   //Leap Controls
@@ -716,28 +733,6 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
 
 
-        //////////////////////inverser ////////////////////////////////
-        /*if (hands.length == 2) {
-          if (hands[0].position.x < hands[1].position.x) {
-            //    console.log('gauche');
-
-            hands[0].material.color.setHex(0xff0000);
-
-          } else if (hands[1].position.x < hands[0].position.x) {
-            //  console.log(hands);
-            // hands.reverse();
-            //      console.log('droite');
-            return;
-
-       
-            //hands[0].material.color.setHex(0xffff00);
-          //  console.log('droite');
-
-          }
-
-        }
-
-*/
         for (var j = 0; j < 5; j++) {
 
           if (frame.hands[i].fingers[j]) {
@@ -761,7 +756,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
               hands[0].fingers[j].material = matOrange;
               activeFinger = leapToScene(frame.hands[1].fingers[0].tipPosition);
 
-          //    console.log(hands[1].fingers[0].material = matRed);
+               hands[1].fingers[0].material = matRed;
 
             } else {
                 activeFinger = new THREE.Vector3( 0, 0, 0 );
@@ -779,7 +774,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
 
     }
 
-hands[1].matrix.makeRotationFromEuler(camera.rotation);
+//hands[1].matrix.makeRotationFromEuler(camera.rotation);
 
 
     /////////////////
@@ -1005,6 +1000,15 @@ renderer.setClearColor(maincolor);
   renderer.render(scene, cameraRight);
 
 
+
+  cameraTop.updateProjectionMatrix();
+
+  renderer.setViewport(window.innerWidth-sizeCamera,window.innerHeight-sizeCamera*2, sizeCamera, sizeCamera);
+  renderer.setScissor(window.innerWidth -sizeCamera, window.innerHeight-sizeCamera*2, window.innerHeight,sizeCamera);
+  renderer.enableScissorTest(true);
+//  renderer.setClearColor(0xdd8888);
+
+  renderer.render(scene, cameraTop);
 
  // stats.update();
 
