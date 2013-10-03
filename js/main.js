@@ -461,7 +461,9 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
     sphermesh.position = point;
     scene.add(sphermesh);
 
-    sphereArray.push(sphermesh);
+  if(triangleMode) sphereArray.push(sphermesh);
+  else sphereMeshArray.push(sphermesh);
+
 
   }
 
@@ -477,25 +479,114 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
   //        MESH CREATION
   ///////////////////////////////////////////////////////////////////////////////////////
 
+  ////// Geometry for triangles an line
+  //
+
+  var geom = new THREE.Geometry();
+
+  geom.faces.push(new THREE.Face3(0, 1, 2));
+  //geom.computeFaceNormals();
+  activeMesh = new THREE.Mesh(geom, matBlue);
+
+  scene.add(activeTriangle);
 
 
 
 
-  var pointMeshArray = new Array(); // a utilise si je veux sauvegarder
+
+  var pointMeshArray = new Array();
+  var pointAllArray = new Array();
+  var sphereMeshArray = new Array();
 
 
 
+  function createPointMesh() {
 
-function createPointMesh() {
+
+    var smallid;
+
+    pointMeshArray.push(activeFinger);
+    pointAllArray.push(activeFinger);
+
+    var currentpoint = pointMeshArray[pointMeshArray.length - 1];
+
+    smallId = proximity(currentpoint, proxVal);
+
+        if (smallId !== false) {
+
+          currentpoint = pointAllArray[smallId];
+
+          pointAllArray[pointAllArray.length - 1] =  activeMesh;
+          sphereMeshArray.push(' ');
+
+          sphereMeshArray[smallId].material = matRed;
+
+        } else {
+          console.log('new point');
+          createSphere(currentpoint);
+
+        }
+
+         activeMesh.geometry.vertices.push(currentpoint);
+         // ;ethode 1 -- si ca ne marche pas, initialiser des vercies vides et les modifier avec l.id;
+
+  }
 
 
+  function proximityMesh(vect, val) {
+
+
+    var smallest = 2000;
+    var smallId = false;
+
+    for (var i = 0; i < pointAllArray.length - 1; i++) { // explore all the points
+
+      if (vect.distanceTo(pointAllArray[i]) < val && vect.distanceTo(pointAllArray[i]) < smallest) {
+
+        if(pointAllArray[i] == pointMeshArray[0]) {
+          //bingo !
+          createComplexMesh();
+        }
+
+      // if smaller than the dist, the last smallest and not himself
+        smallest = vect.distanceTo(pointArray[i]); // store the smallest
+        smallId = i;
+
+      }
+
+    }
+    return smallId; //return the id else, return false
 
 }
 
-function proximityMesh() {
 
 
+function createComplexMesh() {
+
+    activeTriangle.geometry.vertices[0] =
+      activeTriangle.geometry.vertices[1] =
+      activeTriangle.geometry.vertices[2] = new THREE.Vector3(0, 0, 0);
+
+    var geom = new THREE.Geometry();
+
+    for(var i = 0; i<pointMeshArray.length;i++) {
+       geom.vertices.push(pointMeshArray[i]);
+    }
+
+
+    geom.faces.push(new THREE.Face3(0, 1, 2));
+    geom.computeFaceNormals();
+
+    var object = new THREE.Mesh(geom, matBlue);
+    object.geometry.verticesNeedUpdate = true;
+
+
+    scene.add(object);
+
+
+     pointMeshArray = [];
 }
+
 
 
 //function createMesh(/* faire passer un array */){}
@@ -774,7 +865,6 @@ hands[1].matrix.makeRotationFromEuler(camera.rotation);
 
 
 document.onmousedown = function() {
-  console.log( camera.rotation);
 
 };
 
