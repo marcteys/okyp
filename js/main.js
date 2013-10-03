@@ -50,7 +50,7 @@ var leftHandId, rightHandId;
 init();
 animate();
 
-var triangleMode = true;
+var triangleMode = false;
 
 //ajout de nouveaux points
 var activeTriangle;
@@ -481,14 +481,22 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
   ////// Geometry for triangles an line
   //
+  //Ce que je dois faire pour que ça marche : créer a chaque nouveau point a partir de 3 un nouveau mesh, qui prend en identité le premier point , le courant et le dernier
+  //
+  //
 
-  var geom = new THREE.Geometry();
+  var geom2 = new THREE.Geometry();
 
-  geom.faces.push(new THREE.Face3(0, 1, 2));
-  //geom.computeFaceNormals();
-  activeMesh = new THREE.Mesh(geom, matBlue);
+for(var i = 0; i < 20; i++) {
+    geom2.vertices.push(new THREE.Vector3(0, 0, 0));
+}
 
-  scene.add(activeTriangle);
+
+    geom2.faces.push(new THREE.Face3(0, 1, 2));
+  //geom2.computeFaceNormals();
+  activeMesh = new THREE.Mesh(geom2, matBlue);
+
+  scene.add(activeMesh);
 
 
 
@@ -512,27 +520,46 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
     smallId = proximity(currentpoint, proxVal);
 
-        if (smallId !== false) {
+    if (smallId !== false) {
 
-          currentpoint = pointAllArray[smallId];
+      currentpoint = pointAllArray[smallId];
 
-          pointAllArray[pointAllArray.length - 1] =  activeMesh;
-          sphereMeshArray.push(' ');
+      pointAllArray[pointAllArray.length - 1] = activeMesh;
+      sphereMeshArray.push(' ');
 
-          sphereMeshArray[smallId].material = matRed;
+      sphereMeshArray[smallId].material = matRed;
 
-        } else {
-          console.log('new point');
-          createSphere(currentpoint);
+    } else {
+      console.log('new point');
+      createSphere(currentpoint);
 
-        }
+    }
 
-         activeMesh.geometry.vertices.push(currentpoint);
-         // ;ethode 1 -- si ca ne marche pas, initialiser des vercies vides et les modifier avec l.id;
+  //  activeMesh.geometry.vertices[pointMeshArray.length - 1] = currentpoint;
+    // ;ethode 1 -- si ca ne marche pas, initialiser des vercies vides et les modifier avec l.id;
+
+
+    if (pointMeshArray.length > 2) {
+
+
+      var geom2 = new THREE.Geometry();
+
+      geom2.vertices.push(pointMeshArray[0]);
+      geom2.vertices.push(pointMeshArray[pointMeshArray.length - 2]);
+      geom2.vertices.push(currentpoint);
+
+
+      geom2.faces.push(new THREE.Face3(0, 1, 2));
+
+      activseMesh = new THREE.Mesh(geom2, matBlue);
+geom2.computeFaceNormals();
+      scene.add(activseMesh);
+
+
+
+    }
 
   }
-
-
   function proximityMesh(vect, val) {
 
 
@@ -542,7 +569,7 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
     for (var i = 0; i < pointAllArray.length - 1; i++) { // explore all the points
 
       if (vect.distanceTo(pointAllArray[i]) < val && vect.distanceTo(pointAllArray[i]) < smallest) {
-
+console.log('proche');
         if(pointAllArray[i] == pointMeshArray[0]) {
           //bingo !
           createComplexMesh();
@@ -734,7 +761,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
               hands[0].fingers[j].material = matOrange;
               activeFinger = leapToScene(frame.hands[1].fingers[0].tipPosition);
 
-              console.log(hands[1].fingers[0].material = matRed);
+          //    console.log(hands[1].fingers[0].material = matRed);
 
             } else {
                 activeFinger = new THREE.Vector3( 0, 0, 0 );
@@ -815,7 +842,7 @@ hands[1].matrix.makeRotationFromEuler(camera.rotation);
 
       if (gestures[0].type == 'keyTap') {
         if (leftHandId == gestures[0].handIds && activeFinger.x !== 0) {
-          console.log('tapmaingauche');
+        // console.log('tapmaingauche');
          if(triangleMode) createPoint();
          else createPointMesh();
         }
@@ -886,6 +913,8 @@ cube.rotation.z =  camera.rotation.z;
 
 if(activeFinger.x){
 
+
+//TRIANGLE MODE
     activeTriangle.geometry.vertices[2] = activeFinger;
 
 
@@ -903,9 +932,27 @@ if(activeFinger.x){
 
   activeLine.geometry.verticesNeedUpdate = true;
 
-  if (countPoints % 3 == 0) {
+  if (countPoints % 3 === 0) {
     activeLine.geometry.vertices[1] = activeFinger;
   }
+
+
+
+
+
+
+//MESH MODE
+
+
+  activeMesh.geometry.verticesNeedUpdate = true;
+  activeMesh.geometry.elementsNeedUpdate = true;
+  activeMesh.geometry.morphTargetsNeedUpdate = true;
+  activeMesh.geometry.uvsNeedUpdate = true;
+  activeMesh.geometry.normalsNeedUpdate = true;
+  activeMesh.geometry.colorsNeedUpdate = true;
+  activeMesh.geometry.tangentsNeedUpdate = true;
+  activeMesh.geometry.computeFaceNormals();
+
 
 }
 
