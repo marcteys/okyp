@@ -57,6 +57,9 @@ var activeTriangle;
 var activeLine;
 var countPoints = -1;
 
+var vectorZero = new THREE.Vector3( 0, 0, 0 );
+
+
 function init() {
 
 if (!Detector.webgl) Detector.addGetWebGLMessage();
@@ -228,11 +231,9 @@ scene.add(line);
 
 // ARROWS
 
-  var origin = new THREE.Vector3(0, 0, 0);
-
-  coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), origin, 175, 0xDC0000);
-  coords2 = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), origin, 175, 0x1C1CDF);
-  coords3 = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), origin, 175, 0x00E800);
+  coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), vectorZero, 175, 0xDC0000);
+  coords2 = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), vectorZero, 175, 0x1C1CDF);
+  coords3 = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), vectorZero, 175, 0x00E800);
   scene.add(coords1);
   scene.add(coords2);
   scene.add(coords3);
@@ -299,9 +300,9 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
   ////// Geometry for triangles an line
   var geom = new THREE.Geometry();
 
-  geom.vertices.push(new THREE.Vector3(0, 0, 0));
-  geom.vertices.push(new THREE.Vector3(0, 0, 0));
-  geom.vertices.push(new THREE.Vector3(0, 0, 0));
+  geom.vertices.push(vectorZero);
+  geom.vertices.push(vectorZero);
+  geom.vertices.push(vectorZero);
 
   geom.faces.push(new THREE.Face3(0, 1, 2));
   geom.computeFaceNormals();
@@ -314,8 +315,8 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
   var geomLine = new THREE.Geometry();
 
-  geomLine.vertices.push(new THREE.Vector3(0, 0, 0));
-  geomLine.vertices.push(new THREE.Vector3(0, 0, 0));
+  geomLine.vertices.push(vectorZero);
+  geomLine.vertices.push(vectorZero);
 
   activeLine = new THREE.Line(geomLine, new THREE.LineBasicMaterial({
     color: 0x66cafd
@@ -431,7 +432,7 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
     activeTriangle.geometry.vertices[0] =
       activeTriangle.geometry.vertices[1] =
-      activeTriangle.geometry.vertices[2] = new THREE.Vector3(0, 0, 0);
+      activeTriangle.geometry.vertices[2] = vectorZero;
 
     var geom = new THREE.Geometry();
 
@@ -505,7 +506,7 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
   var geom2 = new THREE.Geometry();
 
 for(var i = 0; i < 20; i++) {
-    geom2.vertices.push(new THREE.Vector3(0, 0, 0));
+    geom2.vertices.push(vectorZero);
 }
 
 
@@ -609,7 +610,7 @@ function createComplexMesh() {
 
     activeTriangle.geometry.vertices[0] =
       activeTriangle.geometry.vertices[1] =
-      activeTriangle.geometry.vertices[2] = new THREE.Vector3(0, 0, 0);
+      activeTriangle.geometry.vertices[2] = vectorZero;
 
     var geom = new THREE.Geometry();
 
@@ -759,7 +760,7 @@ console.log("2 " + hands[0].rotation.constructor.toString());
                hands[1].fingers[0].material = matRed;
 
             } else {
-                activeFinger = new THREE.Vector3( 0, 0, 0 );
+                activeFinger = vectorZero;
             }
 
           } else {
