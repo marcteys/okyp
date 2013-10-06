@@ -4,16 +4,31 @@ okyp
 Generate mesh from leap motion
 
 
-TODO
-----
-[ ] Multiple camera views
-[ ] Improving the hand drawing
-[ ] 3D UI ?
-[ ] more color? 
 
-[ ] faire en sorte que le point directeur de la main droite soit en fait le point medium de toute la main -> plus de precision
+## Requirements
 
-Notes
-------
-* I work with new line between points 0 and 1. Maybe create a wireframe mesh (that means vercices.needupdate = false when no active point)
-* 
+* A leap motion controller
+* A recent browser which supports WebGL
+
+
+
+
+## Usage
+
+
+
+
+## Notes
+
+
+
+
+## TODO
+
+* Multiple camera views
+* faire en sorte que le point directeur de la main droite soit en fait le point medium de toute la main -> plus de precision
+
+## Dependancies
+
+* LeapJS
+* ThreeJS
