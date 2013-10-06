@@ -26,7 +26,18 @@ exemple ;isc control transform
 
 
 */
-var cube;
+
+
+//Custom settings
+
+  var proxVal = 180;
+  var triangleMode = true;
+
+
+
+// global vars
+
+var 
 var maincolor = new THREE.Color( 0x444444 );
 
 
@@ -50,7 +61,6 @@ var leftHandId, rightHandId;
 init();
 animate();
 
-var triangleMode = true;
 
 //ajout de nouveaux points
 var activeTriangle;
@@ -289,8 +299,6 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
   var trianglesArray = new Array(); // "  var countTriangles;
 
   var pointA, pointB, pointC;
-
-  var proxVal = 180;
 
   var sphereArray = new Array();
 
