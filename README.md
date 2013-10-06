@@ -47,11 +47,12 @@ In the `main.js` file, change the boolean `triangleMode` to `false`
 
 * LeapJS - used to get the data from the leap motion controller.
 * ThreeJS - Powerfull JS library, a standard to develop real-time 3D applications in web browsers.
-* 
+
 ## TODO
 
 * 3D ui
 * Camera from to view is actually bottom view I think
+* better hand insertion in the scene - follow the camera position/rotation (ex "cube" obj in the scene )
 * faire en sorte que le point directeur de la main droite soit en fait le point medium de toute la main -> plus de precision
 
 
