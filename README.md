@@ -3,7 +3,7 @@ OKYP
 
 Create 3D objects in your browser with a Leap Motion controller.
 
-[Live Demo](http://marcteyssier.com/experiment/okyp/)
+[Live Demo](http://marcteyssier.com/experiment/okyp/) * currently not working*
 
 
 ## Requirements
