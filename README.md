@@ -3,7 +3,7 @@ OKYP
 
 Create 3D objects in your browser with a Leap Motion controller.
 
-[Live Demo](http://marcteyssier.com/experiment/okyp/) *currently not working*
+[Live Demo](http://marcteyssier.com/experiment/okyp/)
 
 
 ## Requirements
@@ -18,7 +18,7 @@ Okyp needs 2 hands to works. When you put your 2 hands in the scene, you can see
 
 ### Navigate in the scene
 
-To navigate in the scene, you ***must** have only one hand detected.
+To navigate in the scene, you **must** have only one hand detected.
 The camera controls are provided by a motified version of [threeleapcontrols](https://github.com/torstensprenger/threeleapcontrols). 
 
 ***Rotate :*** Use 3 fingers, and rotate/move them.
