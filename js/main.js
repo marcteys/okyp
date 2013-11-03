@@ -26,17 +26,7 @@ exemple ;isc control transform
 
 
 */
-
-
-//Custom settings
-
-  var proxVal = 180;
-  var triangleMode = true;
-
-
-
-// global vars
-
+var cube;
 var maincolor = new THREE.Color( 0x444444 );
 
 
@@ -60,14 +50,12 @@ var leftHandId, rightHandId;
 init();
 animate();
 
+var triangleMode = true;
 
 //ajout de nouveaux points
 var activeTriangle;
 var activeLine;
 var countPoints = -1;
-
-var vectorZero = new THREE.Vector3( 0, 0, 0 );
-
 
 function init() {
 
@@ -121,7 +109,7 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
   cameraControls.zoomEnabled = true;
   cameraControls.zoomSpeed = 4;
   cameraControls.zoomHands = 1;
-  cameraControls.zoomFingers = [4, 6];
+  cameraControls.zoomFingers = [5, 6];
   cameraControls.zoomMin = 50;
   cameraControls.zoomMax = 2000;
 
@@ -151,7 +139,27 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
   //        BASE SETTINGS
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  
+  /*
+  var whiteLine = new THREE.LineBasicMaterial({
+        color: 0x0000ff,
+        linewidth: 10
+    });
+  whiteLine.linewidth = 10;
+
+
+    var geometry2 = new THREE.Geometry();
+    geometry2.vertices.push(new THREE.Vector3(-100, 0, 0));
+    geometry2.vertices.push(new THREE.Vector3(0, 100, 0));
+    geometry2.vertices.push(new THREE.Vector3(100, 0, 0));
+
+    var line = new THREE.Line(geometry2, material);
+
+scene.add(line);
+*/
+
+
+  // travail sur les mains 
+  // 
 
 
 
@@ -169,10 +177,13 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
   var matOrange = new THREE.MeshPhongMaterial({
     color: 0x038fd7
-
+   // side: THREE.DoubleSide,
+  //  transparent: true,
+  //  opacity: 0.8
   });
 
   var matRed = new THREE.MeshPhongMaterial({
+   // color: 0xC6010A,
     color: 0xFF010A,
     transparent: true,
     opacity: 0.8
@@ -180,18 +191,21 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
   var matWhite = new THREE.MeshPhongMaterial({
     color: 0xFFFFFF,
-  
+   // side: THREE.DoubleSide,
+   // transparent: true,
     opacity: 0.8
   });
 
   var matGreen = new THREE.MeshPhongMaterial({
     color: 0x00cc00,
+ //   transparent: true,
     opacity: 0.8
   });
 
   var matYellow = new THREE.MeshPhongMaterial({
     color: 0xFFD700
-
+  //  transparent: true,
+  //  opacity: 0.8
   });
 
   var matLightGrey = new THREE.MeshPhongMaterial({
@@ -212,11 +226,13 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 
 
-  // ARROWS
+// ARROWS
 
-  coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), vectorZero, 175, 0xDC0000);
-  coords2 = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), vectorZero, 175, 0x1C1CDF);
-  coords3 = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), vectorZero, 175, 0x00E800);
+  var origin = new THREE.Vector3(0, 0, 0);
+
+  coords1 = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), origin, 175, 0xDC0000);
+  coords2 = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), origin, 175, 0x1C1CDF);
+  coords3 = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), origin, 175, 0x00E800);
   scene.add(coords1);
   scene.add(coords2);
   scene.add(coords3);
@@ -245,6 +261,18 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
 
 
+cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNormalMaterial());
+ //     scene.add(cube);
+
+
+
+
+
+
+
+
+
+
 
   ///////////////////////////////////////////////////////////////////////////////////////
   //        TRIANGLE CREATION  ** I can also create complex shape 
@@ -256,10 +284,12 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
   //
 
 
-  var pointArray = new Array(); // Use it if I want to save 
-  var trianglesArray = new Array(); // 
+  var pointArray = new Array(); // a utilise si je veux sauvegarder
+  var trianglesArray = new Array(); // "  var countTriangles;
 
   var pointA, pointB, pointC;
+
+  var proxVal = 180;
 
   var sphereArray = new Array();
 
@@ -269,9 +299,9 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
   ////// Geometry for triangles an line
   var geom = new THREE.Geometry();
 
-  geom.vertices.push(vectorZero);
-  geom.vertices.push(vectorZero);
-  geom.vertices.push(vectorZero);
+  geom.vertices.push(new THREE.Vector3(0, 0, 0));
+  geom.vertices.push(new THREE.Vector3(0, 0, 0));
+  geom.vertices.push(new THREE.Vector3(0, 0, 0));
 
   geom.faces.push(new THREE.Face3(0, 1, 2));
   geom.computeFaceNormals();
@@ -284,8 +314,8 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
   var geomLine = new THREE.Geometry();
 
-  geomLine.vertices.push(vectorZero);
-  geomLine.vertices.push(vectorZero);
+  geomLine.vertices.push(new THREE.Vector3(0, 0, 0));
+  geomLine.vertices.push(new THREE.Vector3(0, 0, 0));
 
   activeLine = new THREE.Line(geomLine, new THREE.LineBasicMaterial({
     color: 0x66cafd
@@ -312,6 +342,7 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
         smallId = proximity(pointA, proxVal);
         if (smallId !== false) { // check if there is a value
           pointA = pointArray[smallId]; // change the value to the nearest
+          // il doit y avoir un probleme la 
           pointArray[pointArray.length - 1] = pointA; // change the last id in the array
           sphereArray.push(' ');
 
@@ -367,12 +398,13 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
         default:
         break;
-    } // end switch
+    } // fin switch
 
 
   }
 
 
+  //function to determine the nearest value
 
   function proximity(vect, val) {
 
@@ -399,7 +431,7 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
     activeTriangle.geometry.vertices[0] =
       activeTriangle.geometry.vertices[1] =
-      activeTriangle.geometry.vertices[2] = vectorZero;
+      activeTriangle.geometry.vertices[2] = new THREE.Vector3(0, 0, 0);
 
     var geom = new THREE.Geometry();
 
@@ -465,13 +497,16 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
   ///////////////////////////////////////////////////////////////////////////////////////
 
   ////// Geometry for triangles an line
-
+  //
+  //Ce que je dois faire pour que ça marche : créer a chaque nouveau point a partir de 3 un nouveau mesh, qui prend en identité le premier point , le courant et le dernier
+  //
+  //
 
   var geom2 = new THREE.Geometry();
 
-  for(var i = 0; i < 20; i++) {
-      geom2.vertices.push(vectorZero);
-  }
+for(var i = 0; i < 20; i++) {
+    geom2.vertices.push(new THREE.Vector3(0, 0, 0));
+}
 
 
     geom2.faces.push(new THREE.Face3(0, 1, 2));
@@ -517,6 +552,8 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 
     }
 
+  //  activeMesh.geometry.vertices[pointMeshArray.length - 1] = currentpoint;
+    // ;ethode 1 -- si ca ne marche pas, initialiser des vercies vides et les modifier avec l.id;
 
 
     if (pointMeshArray.length > 2) {
@@ -532,7 +569,7 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
       geom2.faces.push(new THREE.Face3(0, 1, 2));
 
       activseMesh = new THREE.Mesh(geom2, matBlue);
-      geom2.computeFaceNormals();
+geom2.computeFaceNormals();
       scene.add(activseMesh);
 
 
@@ -551,6 +588,7 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
       if (vect.distanceTo(pointAllArray[i]) < val && vect.distanceTo(pointAllArray[i]) < smallest) {
 console.log('proche');
         if(pointAllArray[i] == pointMeshArray[0]) {
+          //bingo !
           createComplexMesh();
         }
 
@@ -571,7 +609,7 @@ function createComplexMesh() {
 
     activeTriangle.geometry.vertices[0] =
       activeTriangle.geometry.vertices[1] =
-      activeTriangle.geometry.vertices[2] = vectorZero;
+      activeTriangle.geometry.vertices[2] = new THREE.Vector3(0, 0, 0);
 
     var geom = new THREE.Geometry();
 
@@ -658,7 +696,19 @@ function createComplexMesh() {
 
 
 
+  /*
 
+
+
+/* // TYPE
+
+console.log("1  " + hands[0].rotation.x);
+var vect = new THREE.Vector3( 5, -9, 2 );
+//hands[0].rotation.setFromAxisAngle(vect, Math.PI / 2);
+console.log("2 " + hands[0].rotation.constructor.toString());
+  //Adding "stabilized" result a less reactive interaction
+
+*/
 
   Leap.loop({
     enableGestures: true
@@ -709,7 +759,7 @@ function createComplexMesh() {
                hands[1].fingers[0].material = matRed;
 
             } else {
-                activeFinger = vectorZero;
+                activeFinger = new THREE.Vector3( 0, 0, 0 );
             }
 
           } else {
@@ -724,13 +774,12 @@ function createComplexMesh() {
 
     }
 
-
+//hands[1].matrix.makeRotationFromEuler(camera.rotation);
 
 
     /////////////////
     // CAMERA CONTROL
     /////////////////
-    
     if (index == -1) {
       cameraControls.update(frame);
     } else {
@@ -757,6 +806,7 @@ function createComplexMesh() {
 
 
     if (gestures.length > 0) {
+      // In this example we will focus only on the first gesture, for the sake of simplicity
       if (gestures[0].type == 'circle') {
         console.log('circle');
         circle = gestures[0];
@@ -770,18 +820,24 @@ function createComplexMesh() {
           // Check if pointable exists
           if (direction) {
             normal = circle.normal;
-        
+            // Check if product of vectors is going forwards or backwards
+            // Since Leap uses a right hand rule system
+            // forward is into the screen, while backwards is out of it
             clockwise = Leap.vec3.dot(direction, normal) > 0;
             if (clockwise) {
+            //  triangleMode = !triangleMode;
+              //Do clockwose stuff
             } else {
+              //Do counterclockwise stuff
             }
           }
         }
-      } // end gesture circle
+      } // fin gesture circle
 
 
       if (gestures[0].type == 'keyTap') {
         if (leftHandId == gestures[0].handIds && activeFinger.x !== 0) {
+        // console.log('tapmaingauche');
          if(triangleMode) createPoint();
          else createPointMesh();
         }
@@ -808,13 +864,21 @@ function createComplexMesh() {
 
 
 
+  // transparency cube /////////////////
 
-
+//renderer.setClearColor( maincolor);
+ //renderer.autoClear = false;
  renderer.autoClearColor = maincolor;
 
 
   container = document.getElementById('container');
   container.appendChild(renderer.domElement);
+
+  stats = new Stats();
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.top = '0px';
+  stats.domElement.style.zIndex = 100;
+ // container.appendChild(stats.domElement);
 
 
   window.addEventListener('resize', onWindowResize, false);
@@ -834,6 +898,13 @@ document.onmousedown = function() {
 function animate() {
 
 
+/*
+
+cube.rotation.x =  camera.rotation.x;
+cube.rotation.y =  camera.rotation.y;
+cube.rotation.z =  camera.rotation.z;
+
+*/
 
 if(activeFinger.x){
 
@@ -894,6 +965,14 @@ if(activeFinger.x){
 function render() {
 
 
+  /*
+          renderer.setViewport( 0, 0, window.innerWidth/2, window.innerHeight);
+          renderer.setScissor( 0, 0, window.innerWidth/2, window.innerHeight);
+          renderer.enableScissorTest ( true );
+          renderer.setClearColor( view.background );
+
+*/
+
 //  renderer.autoClear = true;
 
   var sizeCamera = 200;
@@ -931,6 +1010,7 @@ renderer.setClearColor(maincolor);
 
   renderer.render(scene, cameraTop);
 
+ // stats.update();
 
 }
 
@@ -980,7 +1060,7 @@ function changeControlsIndex() {
 
 
 function addGrid(size, step, color, opacity) {
-
+  //     var size = 1000, step = 100;
 
   var geometry = new THREE.Geometry();
 
