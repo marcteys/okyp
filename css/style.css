@@ -44,3 +44,73 @@ font-weight: 300;
 a {
 	color: white;
 }
+
+
+.explications {
+position: absolute;
+left:0px;
+top: 120px;
+/*top:50%;*/
+/*margin-top:-140px;*/
+z-index:200;
+font-size: 12px;
+color: white;
+font-weight: 300;
+text-align: center;
+border-radius: 5px;
+border: 1px solid rgba(255,255,255,.3);
+border-left: none;
+padding: 10px;
+padding-top: 20px;
+padding-bottom: 0;
+transition:left .5s;
+-webkit-transition:left .5s;
+width: 90px;
+background-color: rgba(68,68,68,.8);
+}
+.exp {
+	margin-bottom: 20px;
+}
+
+.exp, .exp img  {
+	display: block;
+}
+.exp img  {
+	margin: 0 auto;
+	margin-bottom: 10px;
+}
+.expoff {
+left: -120px;
+
+}
+.closepanel {
+	/*top:-20px;*/
+	position: absolute;
+z-index:200;
+font-size: 12px;
+color: white;
+font-weight: 300;
+	height:12px;
+	line-height: 12px;
+	background: url(../img/closepanel.png) left no-repeat;
+	height: 12px;
+	width: 13px;
+/*	right: -38px;*/
+	top: 0;
+	cursor: pointer;
+	opacity: 1;
+	padding-left: 18px;
+	top:100px;
+	left: 30px;
+	transition:opacity .5s;
+-webkit-transition:opacity .5s;
+}
+.closepaneldisplay {
+		background: url(../img/displaypanel.png) left no-repeat;
+		opacity: .7;
+}
+.closepanel img {
+	margin-right:5px;
+	vertical-align: middle;
+
+}

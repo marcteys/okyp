@@ -23,6 +23,23 @@ THE CODE IS NOT CLEAN FOR THE MOMENT
 <div id="container">
 
 </div>
+
+<div class="closepanel closepaneldisplay">Help</div>
+
+<div class="explications expoff">
+
+ <div class="exp">
+ <img src="img/create.png">
+  Creation - <em>"Tap" to create point</em></div>
+    <div class="exp"><img src="img/rotate.png">
+  Rotation</div>
+ <div class="exp"> <img src="img/scale.png">
+  Zoom</div>
+
+</div>
+
+
+
 <div class="credits">Design and Development by <a href="http://marcteyssier.com">Marc Teyssier</a></div>
 
     <script type="text/javascript" src="lib/three.js/build/three.js"></script>
@@ -37,5 +54,34 @@ THE CODE IS NOT CLEAN FOR THE MOMENT
 <!-- Main js file here -->
     <script type="text/javascript" src="js/main.js"></script>
 
+
+    <!-- UI stuff -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js
+"></script>
+
+<script>
+
+$('.closepanel').click( function() {
+    $('.explications').toggleClass('expoff');
+    $('.closepanel').toggleClass('closepaneldisplay');
+
+});
+
+</script>
+<script>
+
+var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-26921492-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+ $(document).ready(function() {
+
+ });</script>
 </body>
 </html>
