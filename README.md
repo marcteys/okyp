@@ -3,12 +3,12 @@ OKYP
 
 Create 3D objects in your browser with a Leap Motion controller.
 
-[Live Demo](http://marcteyssier.com/experiment/okyp/)
+[Video](https://vimeo.com/78474151) - [Project Page](http://marcteyssier.com/experiment/okyp/)
 
 
 ## Requirements
 
-* A leap motion controller
+* A Leap Motion controller
 * A recent browser which supports WebGL
 
 ## Usage
@@ -43,17 +43,17 @@ In the `main.js` file, change the boolean `triangleMode` to `false`
 ### Notes
 
 * The best way to be prescise is to use the index of each hands.
-* Okyp detect automatically when you try to create a point near an other point. It is better to have a precise closed shape. You can increase or decreate this value by modifing the variable `proxVal` at line //insert line here.
+* Okyp automatically detect when you try to create a point near an other point. It is better to have a precise closed shape. You can increase or decreate this value by modifing the variable `proxVal` at line //insert line here.
 
 ## Dependancies
 
 * LeapJS - used to get the data from the leap motion controller.
 * ThreeJS - Powerfull JS library, a standard to develop real-time 3D applications in web browsers.
 
+
+
 ## TODO
 
-* 3D ui
-* Camera from to view is actually bottom view I think
 * better hand insertion in the scene - follow the camera position/rotation (ex "cube" obj in the scene )
 
 
