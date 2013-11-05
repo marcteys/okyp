@@ -7,30 +7,28 @@
              __/ | |    
             |___/|_|    
 
-Leap Motion mesh builder
-
-
-
-interaction : points fermés pour zoomer/rotationner, etc
-
-deux doigts pour modéliser
-
-
-exemple rotation : voxel paint
-exemple ;isc control transform
-
-///metre en rouge les points actuels et en blanc(bleu ?) les points des autres tris
-
-
-//amélioration : faire petit shcéma des mains pour voir quels doigts sont actifs ! (a mettre en couleur, vert ou rouge)
-
+Gestural 3D Modeling
+         with Leap Motion
 
 */
+
+
+
+
+//User variables
+
+var triangleMode = true; // <- Buy default we can only creates triangles (3 vertices mesh). Change to false for more complex shapes
+
+
+// Visual variables
+
 var cube;
 var maincolor = new THREE.Color( 0x444444 );
 
-
 var container, stats;
+
+
+// Camera variables
 
 var camera, controls, scene, renderer;
 var cameraRight;
@@ -42,15 +40,19 @@ var lastControlsIndex = -1,
 
 var cross;
 
+
+//Leap variables
 var clock, geometry, material, mesh, controller, hands = [];
 
 var SCENE_SIZE = 1000;
 var activeFinger = new THREE.Vector3( 0, 0, 0 );
 var leftHandId, rightHandId;
+
+
+
 init();
 animate();
 
-var triangleMode = true;
 
 //ajout de nouveaux points
 var activeTriangle;
@@ -65,34 +67,29 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
   ///////////////////////////////////////////////////////////////////////////////////////
   //        BASE SETTINGS
   ///////////////////////////////////////////////////////////////////////////////////////
+  
+  scene = new THREE.Scene();
 
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = SCENE_SIZE * 2;
     camera.position.y = 1000;
-
-  scene = new THREE.Scene();
-
-  camera.lookAt(scene.position);
-
+    camera.lookAt(scene.position);
 
 
   cameraRight = new THREE.PerspectiveCamera(45, 1, 1, 10000);
-
     cameraRight.position.x = 2000;
     cameraRight.position.y = 0;
     cameraRight.position.z = 0;
     cameraRight.lookAt(new THREE.Vector3(0,0,0));
 
   cameraTop = new THREE.PerspectiveCamera(45, 1, 1, 10000);
-
     cameraTop.position.x = 0;
     cameraTop.position.y = 2000;
     cameraTop.position.z = 0;
-        cameraTop.rotation.z= THREE.Math.PI;
-        cameraTop.rotation.x= THREE.Math.PI;
-        cameraTop.rotation.y= THREE.Math.PI;
-
+    cameraTop.rotation.z= THREE.Math.PI;
+    cameraTop.rotation.x= THREE.Math.PI;
+    cameraTop.rotation.y= THREE.Math.PI;
     cameraTop.lookAt(new THREE.Vector3(0,0,-1));
 
 
@@ -157,9 +154,6 @@ if (!Detector.webgl) Detector.addGetWebGLMessage();
 scene.add(line);
 */
 
-
-  // travail sur les mains 
-  // 
 
 
 
@@ -226,7 +220,7 @@ scene.add(line);
 
 
 
-// ARROWS
+  // Arrows
 
   var origin = new THREE.Vector3(0, 0, 0);
 
@@ -239,43 +233,26 @@ scene.add(line);
 
 
 
+
   ///////////////////////////////////////////////////////////////////////////////////////
   //        SCENE
   ///////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-
-
-
-  ///////////////////////////////////////////////////////////////////////////////////////
-  //        SCENE UTILS
-  ///////////////////////////////////////////////////////////////////////////////////////
-
-
   addGrid(1000, 100, 0x888888, 1);
-
 
   addLights();
 
 
 
-cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNormalMaterial());
+  //cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNormalMaterial());
  //     scene.add(cube);
 
 
 
 
-
-
-
-
-
-
-
   ///////////////////////////////////////////////////////////////////////////////////////
-  //        TRIANGLE CREATION  ** I can also create complex shape 
+  //        TRIANGLE CREATION  **  if triangleMode = true
   ///////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -322,7 +299,6 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
   }));
 
   scene.add(activeLine);
-
 
 
 
@@ -488,12 +464,8 @@ cube = new THREE.Mesh(new THREE.CubeGeometry(200, 200, 200), new THREE.MeshNorma
 
 
 
-
-
-
-
   ///////////////////////////////////////////////////////////////////////////////////////
-  //        MESH CREATION
+  //        MESH CREATION  **  if triangleMode = false
   ///////////////////////////////////////////////////////////////////////////////////////
 
   ////// Geometry for triangles an line
@@ -637,9 +609,6 @@ function createComplexMesh() {
   ///////////////////////////////////////////////////////////////////////////////////////
   //        DELETE triangle ? ** use two fingers and leap control obj
   ///////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 
@@ -835,6 +804,8 @@ console.log("2 " + hands[0].rotation.constructor.toString());
       } // fin gesture circle
 
 
+     //The point is created here
+
       if (gestures[0].type == 'keyTap') {
         if (leftHandId == gestures[0].handIds && activeFinger.x !== 0) {
         // console.log('tapmaingauche');
@@ -975,6 +946,7 @@ function render() {
 
 //  renderer.autoClear = true;
 
+
   var sizeCamera = 200;
 
   renderer.clear();
@@ -984,7 +956,7 @@ function render() {
   renderer.setViewport(0, 0, window.innerWidth , window.innerHeight);
   renderer.setScissor(0, 0, window.innerWidth , window.innerHeight);
   renderer.enableScissorTest(true);
-renderer.setClearColor(maincolor);
+  renderer.setClearColor(maincolor);
 
   renderer.render(scene, camera);
 
