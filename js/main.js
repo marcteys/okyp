@@ -18,6 +18,7 @@ Gestural 3D Modeling
 //User variables
 
 var triangleMode = true; // <- Buy default we can only creates triangles (3 vertices mesh). Change to false for more complex shapes
+var proxVal = 180;
 
 
 // Visual variables
