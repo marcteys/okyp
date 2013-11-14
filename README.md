@@ -54,7 +54,7 @@ In the `main.js` file, change the boolean `triangleMode` to `false`
 
 ## TODO
 
-* better hand insertion in the scene - follow the camera position/rotation (ex "cube" obj in the scene )
+* Better hand insertion in the scene - follow the camera position/rotation (ex "cube" obj in the scene )
 
 
 
